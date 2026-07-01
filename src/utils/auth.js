@@ -1,6 +1,6 @@
 // src/utils/auth.js
 
-const USERS_KEY   = 'dripkart_users'
+const USERS_KEY = 'dripkart_users'
 const SESSION_KEY = 'dripkart_session'
 
 // ── tiny hash for local users ─────────────────────────────────────────────────
@@ -82,81 +82,42 @@ export function findLocalUserByEmail(email) {
 //   2. If API fails OR returns 400, try local registered users by email
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function loginUser({ emailOrUsername, password }) {
-  const trimmedUser = emailOrUsername.trim()
-  const trimmedPass = password  // do NOT trim passwords
 
-  // ── 1. DummyJSON API ──────────────────────────────────────────────────────
-  let apiError = null
-  try {
-    const res = await fetch('https://dummyjson.com/auth/login', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username:      trimmedUser,   // DummyJSON always needs "username" key
-        password:      trimmedPass,
-        expiresInMins: 60,
-      }),
-    })
+import { DEMO_CREDENTIALS } from '@/services/api'
 
-    // Parse response regardless of status so we can read error messages
-    const data = await res.json()
+export function loginUser({ emailOrUsername, password }) {
 
-    if (res.ok) {
-      // ✅ API login succeeded
-      const user = {
-        id:        data.id,
-        firstName: data.firstName,
-        lastName:  data.lastName,
-        email:     data.email,
-        phone:     data.phone   ?? '',
-        image:     data.image   ?? '',
-        username:  data.username,
-        token:     data.token,
-        source:    'api',
-      }
-      saveSession(user)
-      return { success: true, user, token: data.token }
-    }
-
-    // API returned 400/401 — wrong credentials for that username
-    // Log for debugging but don't show raw API error to user
-    apiError = data?.message || `API error ${res.status}`
-    console.warn('[DripKart] DummyJSON login failed:', apiError)
-
-  } catch (networkErr) {
-    // No internet, CORS, or other fetch error
-    apiError = networkErr.message
-    console.warn('[DripKart] DummyJSON API unreachable:', networkErr.message)
-  }
-
-  // ── 2. Fallback: locally registered users ─────────────────────────────────
-  // Match by email (local users are identified by email, not username)
-  const localUser = findLocalUserByEmail(trimmedUser)
-
-  if (!localUser) {
-    // Give a helpful message depending on what happened
-    if (apiError) {
-      return {
-        success: false,
-        error:
-          'Credentials not found. Use the demo account (kminchelle / 0lelplR) or register a new account.',
-      }
-    }
+  // ✅ 1. Check DEMO credentials first
+  if (
+    emailOrUsername === DEMO_CREDENTIALS.username &&
+    password === DEMO_CREDENTIALS.password
+  ) {
     return {
-      success: false,
-      error: 'No account found with this email or username.',
+      success: true,
+      user: {
+        id: 'demo_user',
+        firstName: 'Demo',
+        lastName: 'User',
+        email: 'demo@dripkart.com',
+        image: `https://api.dicebear.com/7.x/initials/svg?seed=Demo+User`,
+        source: 'demo',
+      }
     }
   }
 
-  if (localUser.passwordHash !== simpleHash(trimmedPass)) {
-    return { success: false, error: 'Incorrect password. Please try again.' }
+  // ✅ 2. Then check localStorage users
+  const users = JSON.parse(localStorage.getItem('dripkart_users') || '[]')
+
+  const user = users.find(u =>
+    u.email === emailOrUsername ||
+    u.firstName === emailOrUsername
+  )
+
+  if (user && user.passwordHash === simpleHash(password)) {
+    return { success: true, user }
   }
 
-  // ✅ Local login succeeded
-  const { passwordHash, ...safe } = localUser
-  saveSession(safe)
-  return { success: true, user: safe }
+  return { success: false, error: "Invalid credentials" }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -171,15 +132,15 @@ export function registerUser({ firstName, lastName, email, phone, password }) {
   }
 
   const newUser = {
-    id:           Date.now(),
-    firstName:    firstName.trim(),
-    lastName:     lastName.trim(),
-    email:        email.trim().toLowerCase(),
-    phone:        phone.replace(/\D/g, ''),
+    id: Date.now(),
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    email: email.trim().toLowerCase(),
+    phone: phone.replace(/\D/g, ''),
     passwordHash: simpleHash(password),
-    image:        `https://api.dicebear.com/7.x/initials/svg?seed=${firstName}+${lastName}`,
-    source:       'local',
-    createdAt:    new Date().toISOString(),
+    image: `https://api.dicebear.com/7.x/initials/svg?seed=${firstName}+${lastName}`,
+    source: 'local',
+    createdAt: new Date().toISOString(),
   }
 
   saveUsers([...users, newUser])
@@ -203,18 +164,18 @@ export function validatePhone(phone) {
 
 export function validatePassword(password) {
   const checks = {
-    length:    password.length >= 8,
+    length: password.length >= 8,
     uppercase: /[A-Z]/.test(password),
     lowercase: /[a-z]/.test(password),
-    number:    /\d/.test(password),
+    number: /\d/.test(password),
   }
   const score = Object.values(checks).filter(Boolean).length
   return {
     checks,
     score,
     strength: score <= 1 ? 'Weak' : score <= 2 ? 'Fair' : score === 3 ? 'Good' : 'Strong',
-    color:    score <= 1 ? '#ef4444' : score <= 2 ? '#f59e0b' : score === 3 ? '#3b82f6' : '#22c55e',
-    valid:    score >= 3,
+    color: score <= 1 ? '#ef4444' : score <= 2 ? '#f59e0b' : score === 3 ? '#3b82f6' : '#22c55e',
+    valid: score >= 3,
   }
 }
 
