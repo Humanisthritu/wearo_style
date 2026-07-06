@@ -213,7 +213,7 @@ export default function Navbar() {
                       <DropdownItem
                         icon={<SettingsOutlinedIcon fontSize="small" />}
                         label="Settings"
-                        href="/profile/settings"
+                        href="/settings"
                         onClick={() => setDropdownOpen(false)}
                       />
                     </div>

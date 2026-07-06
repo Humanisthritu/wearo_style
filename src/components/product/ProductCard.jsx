@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import { addToCart } from '@/redux/slices/cartSlice'
-import { toggleWishlist, selectIsWishlisted } from '@/redux/slices/wishlistSlice'
+import { toggleWishlist, selectIsWishlisted, removeFromWishlist } from '@/redux/slices/wishlistSlice'
 import { useToast } from '@/context/AppContext'
 import { formatPrice, getDiscountedPrice } from '@/utils'
 import Link from 'next/link'
@@ -32,6 +32,7 @@ export default function ProductCard({ product }) {
         quantity: 1,
       })
     )
+    dispatch(removeFromWishlist(product.id))
 
     showToast('Added to cart! 🛍️')
   }
@@ -48,7 +49,7 @@ export default function ProductCard({ product }) {
   }
 
   return (
-    <Link  href={`/product/${product.id}`}  className="group relative overflow-hidden rounded-3xl bg-white shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 block">
+    <Link href={`/product/${product.id}`} className="group relative overflow-hidden rounded-3xl bg-white shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 block">
       <div className="group relative overflow-hidden rounded-3xl bg-white shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
         {/* Product Image */}
         <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
