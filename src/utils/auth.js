@@ -3,6 +3,8 @@
 // now guards with  typeof window !== 'undefined'
 // so they're safe to import in Server Components and during SSR.
 
+import { DEMO_CREDENTIALS } from "@/services/api"
+
 const USERS_KEY   = 'dripkart_users'
 const SESSION_KEY = 'dripkart_session'
 
@@ -75,61 +77,40 @@ export function findLocalUserByEmail(email) {
 
 // ── login ─────────────────────────────────────────────────────────────────────
 
-export async function loginUser({ emailOrUsername, password }) {
-  const trimmedUser = emailOrUsername.trim()
 
-  // 1. Try DummyJSON API
-  try {
-    const res = await fetch('https://dummyjson.com/auth/login', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username:      trimmedUser,
-        password,
-        expiresInMins: 60,
-      }),
-    })
+export function loginUser({ emailOrUsername, password }) {
 
-    const data = await res.json()
-
-    if (res.ok) {
-      const user = {
-        id:        data.id,
-        firstName: data.firstName,
-        lastName:  data.lastName,
-        email:     data.email,
-        phone:     data.phone   ?? '',
-        image:     data.image   ?? '',
-        username:  data.username,
-        token:     data.token,
-        source:    'api',
-      }
-      saveSession(user)
-      return { success: true, user, token: data.token }
-    }
-
-    console.warn('[DripKart] DummyJSON login failed:', data?.message)
-  } catch (err) {
-    console.warn('[DripKart] DummyJSON API unreachable:', err.message)
-  }
-
-  // 2. Fallback: local registered users
-  const localUser = findLocalUserByEmail(trimmedUser)
-
-  if (!localUser) {
+  // ✅ 1. Check DEMO credentials first
+  if (
+    emailOrUsername === DEMO_CREDENTIALS.username &&
+    password === DEMO_CREDENTIALS.password
+  ) {
     return {
-      success: false,
-      error: 'No account found. Try the demo credentials (kminchelle / 0lelplR) or register.',
+      success: true,
+      user: {
+        id: 'demo_user',
+        firstName: 'Demo',
+        lastName: 'User',
+        email: 'demo@dripkart.com',
+        image: `https://api.dicebear.com/7.x/initials/svg?seed=Demo+User`,
+        source: 'demo',
+      }
     }
   }
 
-  if (localUser.passwordHash !== simpleHash(password)) {
-    return { success: false, error: 'Incorrect password. Please try again.' }
+  // ✅ 2. Then check localStorage users
+  const users = JSON.parse(localStorage.getItem('dripkart_users') || '[]')
+
+  const user = users.find(u =>
+    u.email === emailOrUsername ||
+    u.firstName === emailOrUsername
+  )
+
+  if (user && user.passwordHash === simpleHash(password)) {
+    return { success: true, user }
   }
 
-  const { passwordHash, ...safe } = localUser
-  saveSession(safe)
-  return { success: true, user: safe }
+  return { success: false, error: "Invalid credentials" }
 }
 
 // ── register ──────────────────────────────────────────────────────────────────
