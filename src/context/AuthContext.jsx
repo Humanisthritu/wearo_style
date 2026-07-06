@@ -1,31 +1,24 @@
-"use client";
-import { createContext, useContext, useState, useEffect } from "react";
+'use client'
+// src/components/common/AuthProvider.js
+// Runs ONLY on the client, after hydration is complete.
+// Reads localStorage and dispatches rehydrate so Redux stays in sync.
+// This avoids the SSR mismatch because we never touch localStorage during SSR.
 
-const AuthContext = createContext();
+import { useEffect } from 'react'
+import { useAppDispatch } from '@/hooks/redux'
+import { rehydrate } from '@/redux/slices/authSlice'
+import { getSession } from '@/utils/auth'
 
-export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function AuthProvider({ children }) {
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+    // Only runs on client after first render — safe to read localStorage here
+    const session = getSession()
+    if (session) {
+      dispatch(rehydrate(session))
+    }
+  }, [dispatch])
 
-  const login = (token) => {
-    localStorage.setItem("token", token);
-    setIsLoggedIn(true);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
+  return children
+}

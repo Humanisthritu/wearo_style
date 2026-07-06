@@ -1,57 +1,52 @@
-// src/redux/slices/authSlice.jsx
+
+
 import { createSlice } from '@reduxjs/toolkit'
-import { getSession, clearSession, saveSession } from '@/utils/auth'
+import { saveSession, clearSession } from '@/utils/auth'
 
-// Load initial state from localStorage
-const loadInitialState = () => {
-  const session = getSession()
-
-  return {
-    user: session ?? null,
-    isAuthenticated: !!session,
-    isLoading: false,
-    error: null,
-  }
+const initialState = {
+  user:            null,   // always null on server
+  isAuthenticated: false,  // always false on server
+  isLoading:       false,
+  error:           null,
 }
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: loadInitialState,
+  initialState,            // plain object — no function, no localStorage call
   reducers: {
-    loginSuccess: (state, action) => {
-      state.user = action.payload
+    loginSuccess(state, action) {
+      state.user            = action.payload
       state.isAuthenticated = true
-      state.isLoading = false
-      state.error = null
-
-      saveSession(action.payload)
-
-      console.log('Session saved, current session:', getSession())
+      state.isLoading       = false
+      state.error           = null
+      if (typeof window !== 'undefined') saveSession(action.payload)
     },
-
-    logout: (state) => {
-      state.user = null
+    logout(state) {
+      state.user            = null
       state.isAuthenticated = false
-      state.error = null
-
-      clearSession()
+      state.error           = null
+      if (typeof window !== 'undefined') clearSession()
     },
-
-    updateUser: (state, action) => {
+    updateUser(state, action) {
       if (state.user) {
         state.user = { ...state.user, ...action.payload }
-        saveSession(state.user)
+        if (typeof window !== 'undefined') saveSession(state.user)
+      }
+    },
+    // Called by AuthProvider on mount (client-only) to rehydrate from localStorage
+    rehydrate(state, action) {
+      if (action.payload) {
+        state.user            = action.payload
+        state.isAuthenticated = true
       }
     },
   },
 })
 
-// Actions
-export const { loginSuccess, logout, updateUser } = authSlice.actions
+export const { loginSuccess, logout, updateUser, rehydrate } = authSlice.actions
 
-// Selectors
-export const selectUser = (state) => state.auth.user
-export const selectIsAuthenticated = (state) => state.auth.isAuthenticated
+export const selectUser            = (s) => s.auth.user
+export const selectIsAuthenticated = (s) => s.auth.isAuthenticated
+export const selectAuthLoading     = (s) => s.auth.isLoading
 
-// Reducer
 export default authSlice.reducer
