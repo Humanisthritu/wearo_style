@@ -18,71 +18,6 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import ReplayIcon from '@mui/icons-material/Replay'
 
 
-const MOCK_ORDERS = [
-    {
-        id: 'DK20240001',
-        date: '2024-06-15',
-        status: 'delivered',
-        items: [
-            { name: 'Floral Midi Wrap Dress', brand: 'Zara', emoji: '👗', size: 'M', color: 'Blue', qty: 1, price: 1499 },
-            { name: 'Canvas Tote Bag', brand: 'Caprese', emoji: '👜', size: 'Free', color: 'Tan', qty: 1, price: 999 },
-        ],
-        total: 2498,
-        address: '12, MG Road, Bengaluru - 560001',
-        payment: 'Credit Card',
-        tracking: 'BD123456789IN',
-    },
-    {
-        id: 'DK20240002',
-        date: '2024-06-18',
-        status: 'shipped',
-        items: [
-            { name: 'Air Max 270 Sneakers', brand: 'Nike', emoji: '👟', size: '42', color: 'White', qty: 1, price: 4499 },
-        ],
-        total: 4499,
-        address: '12, MG Road, Bengaluru - 560001',
-        payment: 'UPI',
-        tracking: 'BD987654321IN',
-        estimatedDelivery: '2024-06-22',
-    },
-    {
-        id: 'DK20240003',
-        date: '2024-06-20',
-        status: 'processing',
-        items: [
-            { name: 'Oversized Graphic Tee', brand: 'H&M', emoji: '👕', size: 'L', color: 'Black', qty: 2, price: 799 },
-            { name: 'Classic Snapback Cap', brand: 'New Era', emoji: '🧢', size: 'Free', color: 'Black', qty: 1, price: 499 },
-        ],
-        total: 2097,
-        address: '12, MG Road, Bengaluru - 560001',
-        payment: 'COD',
-        tracking: null,
-    },
-    {
-        id: 'DK20240004',
-        date: '2024-05-30',
-        status: 'cancelled',
-        items: [
-            { name: 'Quilted Bomber Jacket', brand: 'Roadster', emoji: '🧥', size: 'XL', color: 'Olive', qty: 1, price: 2299 },
-        ],
-        total: 2299,
-        address: '12, MG Road, Bengaluru - 560001',
-        payment: 'Net Banking',
-        tracking: null,
-    },
-    {
-        id: 'DK20240005',
-        date: '2024-05-10',
-        status: 'delivered',
-        items: [
-            { name: 'Block Heel Mules', brand: 'Metro', emoji: '🥿', size: '38', color: 'Beige', qty: 1, price: 1399 },
-        ],
-        total: 1399,
-        address: '12, MG Road, Bengaluru - 560001',
-        payment: 'Credit Card',
-        tracking: 'BD111222333IN',
-    },
-]
 
 const STATUS_CONFIG = {
     delivered: { label: 'Delivered', color: 'text-green-700', bg: 'bg-green-50', border: 'border-green-100', icon: <CheckCircleOutlinedIcon fontSize="small" /> },
@@ -100,7 +35,7 @@ export default function OrdersPage() {
     const [activeFilter, setActiveFilter] = useState('All')
     const [searchQuery, setSearchQuery] = useState('')
     const [expandedId, setExpandedId] = useState(null)
-
+    
     function normalizeStatus(status) {
         if (status === 'confirmed') return 'processing'
         return status
@@ -119,12 +54,12 @@ export default function OrdersPage() {
 
             items: o.items.map((item) => ({
                 name: item.title,
-                brand: 'Brand',
-                emoji: '🛍️',
+                brand: item.brand,
+                emoji: item.thumbnail,
                 size: item.size || 'M',
                 color: item.color || 'Default',
                 qty: item.quantity || 1,
-                price: item.price || 0,
+                price: item.priceAtPurchase || 0,
             })),
 
             total: o.pricing?.grandTotal || 0,
@@ -177,6 +112,7 @@ export default function OrdersPage() {
             year: 'numeric',
         })
     }
+
 
 
     return (
@@ -267,7 +203,7 @@ export default function OrdersPage() {
                                     <div className="flex -space-x-2">
                                         {order.items.slice(0, 3).map((item, i) => (
                                             <div key={i} className="w-10 h-12 rounded-lg bg-gray-100 border-2 border-white flex items-center justify-center text-xl shadow-sm">
-                                                {item.emoji}
+                                                <img src={item.emoji} alt={item.title}/>
                                             </div>
                                         ))}
                                         {order.items.length > 3 && (
@@ -297,7 +233,7 @@ export default function OrdersPage() {
                                             </button>
                                         )}
                                         {order.status === 'processing' && (
-                                            <button className="px-3 py-1.5 text-xs font-medium text-red-500 border border-red-100 bg-red-50 rounded-lg hover:border-red-300 transition-colors">
+                                            <button className="px-3 py-1.5 text-xs font-medium text-red-500 border border-red-100 bg-red-50 rounded-lg hover:border-red-300 transition-colors" >
                                                 Cancel
                                             </button>
                                         )}

@@ -66,6 +66,7 @@ export default function CheckoutPage() {
   const cartTotal = useAppSelector(selectCartTotal)
   const addresses = useAppSelector(selectAllAddresses)
   const [orderSummary, setOrderSummary] = useState(null)
+  console.log(items, "items checkout")
 
   // ── Step state ────────────────────────────────────────────────────────────
   const [step, setStep] = useState(1)
