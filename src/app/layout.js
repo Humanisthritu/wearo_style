@@ -39,12 +39,6 @@ export default function RootLayout({ children }) {
       >
         <ReduxProvider>
           <AppProvider>
-            {/*
-              AuthProvider runs useEffect on client-mount only.
-              It reads localStorage and dispatches rehydrate() to Redux.
-              Because it's inside ReduxProvider, the store is available.
-              Because it only runs after hydration, there's no SSR mismatch.
-            */}
             <AuthProvider>
               <Navbar />
               <main className="min-h-screen">{children}</main>

@@ -8,6 +8,8 @@ import { useEffect } from 'react'
 import { useAppDispatch } from '@/hooks/redux'
 import { rehydrate } from '@/redux/slices/authSlice'
 import { getSession } from '@/utils/auth'
+import { rehydrateAddresses } from '@/redux/slices/addressSlice'
+import { rehydrateOrders } from '@/redux/slices/ordersSlice'
 
 export default function AuthProvider({ children }) {
   const dispatch = useAppDispatch()
@@ -17,6 +19,8 @@ export default function AuthProvider({ children }) {
     const session = getSession()
     if (session) {
       dispatch(rehydrate(session))
+      dispatch(rehydrateAddresses())
+      dispatch(rehydrateOrders())
     }
   }, [dispatch])
 
