@@ -16,7 +16,7 @@ function loadAddresses() {
     {
       id: 'addr_1',
       label: 'Home',
-      name: 'Rahul Sharma',
+      name: 'Ritu Kujur',
       phone: '9876543210',
       line1: 'Flat 4B, Sunshine Apartments, 12th Cross',
       line2: 'Indiranagar',
@@ -29,7 +29,7 @@ function loadAddresses() {
     {
       id: 'addr_2',
       label: 'Work',
-      name: 'Rahul Sharma',
+      name: 'Ritu Kujur',
       phone: '9876543210',
       line1: '3rd Floor, Tech Park, Outer Ring Road',
       line2: 'Marathahalli',

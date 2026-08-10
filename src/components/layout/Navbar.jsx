@@ -66,7 +66,7 @@ export default function Navbar() {
     clearSession()                    // clear localStorage + cookie
     dispatch(logout())                // clear Redux state
     showToast('Logged out successfully 👋')
-    router.push('/login')             // send back to login page
+    router.push('/login') 
   }
 
   // ── Avatar initials ─────────────────────────────────────────────────────────

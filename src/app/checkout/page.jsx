@@ -350,7 +350,7 @@ export default function CheckoutPage() {
                         <div>
                           <label className={labelCls}>Full Name *</label>
                           <input value={newAddr.name} onChange={(e) => setNewAddr((f) => ({ ...f, name: e.target.value }))}
-                            placeholder="Rahul Sharma" className={inputCls()} />
+                            placeholder="Ritu Kujur" className={inputCls()} />
                         </div>
                         <div>
                           <label className={labelCls}>Phone *</label>

@@ -67,10 +67,10 @@ export default function LoginPage() {
   const pwWidths = ['25%', '25%', '60%', '100%']
 
   // ── Core login — shared by form submit and demo button ────────────────────
-  async function attemptLogin(emailOrUsername, password) {
+   function attemptLogin(emailOrUsername, password) {
     clear()
     setLoading(true)
-    const result = await loginUser({ emailOrUsername, password })
+    const result =  loginUser({ emailOrUsername, password })
     setLoading(false)
 
     if (!result.success) {
@@ -176,7 +176,7 @@ export default function LoginPage() {
             ))}
           </div>
 
-          {/* Demo pill — clickable */}
+          
           <button onClick={handleDemoLogin} disabled={loading}
             className="relative z-10 rounded-xl p-3.5 border text-left w-full transition-all hover:border-[#ff3f6c]/40 disabled:opacity-60"
             style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
