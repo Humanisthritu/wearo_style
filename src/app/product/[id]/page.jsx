@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '@/services/api'
 import { useParams } from 'next/navigation'
-import ProductCard from '@/components/product/ProductCard'
+import ProductCard from '@/app/components/product/ProductCard'
 import ProductDetailClient from './ProductDetailClient'
 
 const ProductPage = () => {

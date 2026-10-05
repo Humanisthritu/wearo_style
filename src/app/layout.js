@@ -1,14 +1,14 @@
 // src/app/layout.js
 import { Inter, Poppins } from 'next/font/google'
 import './globals.css'
-import { ReduxProvider }  from '@/components/common/ReduxProvider'
-import { AppProvider }    from '@/context/AppContext'
-import Navbar             from '@/components/layout/Navbar'
-import Footer             from '@/components/layout/Footer'
+import { ReduxProvider } from '@/app/components/common/ReduxProvider'
+import { AppProvider } from '@/context/AppContext'
+import Navbar from '@/app/components/layout/Navbar'
+import Footer from '@/app/components/layout/Footer'
 import AuthProvider from '@/context/AuthContext'
-import LayoutClient from '@/components/common/LayoutClient'
+import LayoutClient from '@/app/components/common/LayoutClient'
 
-const inter   = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -16,7 +16,7 @@ const poppins = Poppins({
 })
 
 export const metadata = {
-  title:       'DripKart — Fashion That Moves With You',
+  title: 'DripKart — Fashion That Moves With You',
   description: 'Shop the latest trends in fashion.',
 }
 
@@ -31,8 +31,10 @@ export default function RootLayout({ children }) {
           <AppProvider>
             <AuthProvider>
               <LayoutClient>
-              <main className="min-h-screen">{children}</main>
-                </LayoutClient>
+                <Navbar />
+                <main className="min-h-screen">{children}</main>
+                <Footer />
+              </LayoutClient>
             </AuthProvider>
           </AppProvider>
         </ReduxProvider>

@@ -10,7 +10,7 @@ import { selectCartCount } from '@/redux/slices/cartSlice'
 import { selectWishlistCount } from '@/redux/slices/wishlistSlice'
 import { clearSession } from '@/utils/auth'
 import { useToast } from '@/context/AppContext'
-import SearchBar from '@/components/common/SearchBar'
+import SearchBar from '@/app/components/common/SearchBar'
 
 // MUI icons
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined'
@@ -78,7 +78,7 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement strip */}
-      <div className="bg-[#ff3f6c] text-white text-center py-1.5 text-xs font-medium tracking-wide">
+      <div className="bg-[#8e4440] text-white text-center py-1.5 text-xs font-medium tracking-wide">
         🚀 Free shipping above ₹999 &nbsp;·&nbsp; Use <span className="underline font-semibold">DRIP20</span> for 20% off
       </div>
 
@@ -87,7 +87,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="text-xl font-bold shrink-0 tracking-tight">
-            Drip<span className="text-[#ff3f6c]">Kart</span>
+            Drip<span className="text-[#8e4440]">Kart</span>
           </Link>
 
           {/* Desktop nav links */}
@@ -113,7 +113,7 @@ export default function Navbar() {
               className="relative w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-all">
               <FavoriteBorderIcon fontSize="small" />
               {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-[#ff3f6c] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-1 right-1 w-4 h-4 bg-[#8e4440] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
                   {wishlistCount > 9 ? '9+' : wishlistCount}
                 </span>
               )}
@@ -124,7 +124,7 @@ export default function Navbar() {
               className="relative w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-all">
               <ShoppingBagOutlinedIcon fontSize="small" />
               {cartCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-[#ff3f6c] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-1 right-1 w-4 h-4 bg-[#8e4440] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -145,7 +145,7 @@ export default function Navbar() {
                       className="w-7 h-7 rounded-full object-cover ring-2 ring-gray-100"
                     />
                   ) : (
-                    <div className="w-7 h-7 rounded-full bg-[#ff3f6c] text-white text-xs font-bold flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-full bg-[#8e4440] text-white text-xs font-bold flex items-center justify-center">
                       {getInitials()}
                     </div>
                   )}
@@ -207,7 +207,7 @@ export default function Navbar() {
                       <DropdownItem
                         icon={<LocationOnOutlinedIcon fontSize="small" />}
                         label="Saved Addresses"
-                        href="/profile/addresses"
+                        href="/addresses"
                         onClick={() => setDropdownOpen(false)}
                       />
                       <DropdownItem
@@ -237,7 +237,7 @@ export default function Navbar() {
             ) : (
               /* Not logged in — show Login button */
               <Link href="/login"
-                className="ml-1 px-4 py-2 bg-[#ff3f6c] text-white text-xs font-semibold rounded-lg hover:bg-[#e03560] transition-colors">
+                className="ml-1 px-4 py-2 bg-[#8e4440] text-white text-xs font-semibold rounded-lg hover:bg-[#e03560] transition-colors">
                 Login
               </Link>
             )}
@@ -278,7 +278,7 @@ export default function Navbar() {
                     <img src={user.image} alt={user.firstName}
                       className="w-9 h-9 rounded-full object-cover" />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-[#ff3f6c] text-white text-sm font-bold flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-full bg-[#8e4440] text-white text-sm font-bold flex items-center justify-center">
                       {getInitials()}
                     </div>
                   )}
@@ -309,7 +309,7 @@ export default function Navbar() {
             ) : (
               <div className="px-4 py-3 flex gap-2">
                 <Link href="/login" onClick={() => setMobileOpen(false)}
-                  className="flex-1 py-2.5 bg-[#ff3f6c] text-white text-sm font-semibold rounded-lg text-center hover:bg-[#e03560] transition-colors">
+                  className="flex-1 py-2.5 bg-[#8e4440] text-white text-sm font-semibold rounded-lg text-center hover:bg-[#e03560] transition-colors">
                   Sign in
                 </Link>
                 <Link href="/register" onClick={() => setMobileOpen(false)}
@@ -334,7 +334,7 @@ function DropdownItem({ icon, label, href, onClick, badge }) {
       <span className="text-gray-400">{icon}</span>
       <span className="flex-1">{label}</span>
       {badge > 0 && (
-        <span className="w-5 h-5 bg-[#ff3f6c] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+        <span className="w-5 h-5 bg-[#8e4440] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
           {badge > 9 ? '9+' : badge}
         </span>
       )}

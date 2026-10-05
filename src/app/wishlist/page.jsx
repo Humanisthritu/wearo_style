@@ -16,7 +16,7 @@ import {
 import { useToast } from '@/context/AppContext'
 import { getDiscountedPrice } from '@/utils'
 import Link from 'next/link'
-import ProductCard from '@/components/product/ProductCard'
+import ProductCard from '@/app/components/product/ProductCard'
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import LocalMallTwoToneIcon from '@mui/icons-material/LocalMallTwoTone';
 
@@ -112,7 +112,7 @@ export default function WishlistPage() {
         </p>
         <Link
           href="/shop"
-          className="mt-2 px-6 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors"
+          className="mt-2 px-6 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors"
         >
           Explore products
         </Link>
@@ -144,7 +144,7 @@ export default function WishlistPage() {
 
           <button
             onClick={handleClearAll}
-            className="text-sm text-gray-400 hover:text-[#ff3f6c] transition-colors"
+            className="text-sm text-gray-400 hover:text-[#8e4440] transition-colors"
           >
             Clear all
           </button>

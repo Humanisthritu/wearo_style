@@ -40,7 +40,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <div className="text-xl font-bold text-white font-heading mb-3">
-              Drip<span className="text-[#ff3f6c]">Kart</span>
+              Drip<span className="text-[#8e4440]">Kart</span>
             </div>
             <p className="text-sm leading-relaxed text-gray-500 mb-4">
               Fashion for the fearless. Curated streetwear and everyday essentials.

@@ -1,10 +1,10 @@
 
-import CategoriesSection from "@/components/layout/CategoriesSection";
-import HeroSection from "@/components/layout/HeroSection";
-import NewArrivalsSection from "@/components/layout/NewArrivalsSection";
-import OfferBanner from "@/components/layout/OfferBanner";
-import TrendingSection from "@/components/layout/TrendingSection";
-import TrustBadges from "@/components/layout/TrustBadges";
+import CategoriesSection from "@/app/components/layout/CategoriesSection";
+import HeroSection from "@/app/components/layout/HeroSection";
+import NewArrivalsSection from "@/app/components/layout/NewArrivalsSection";
+import OfferBanner from "@/app/components/layout/OfferBanner";
+import TrendingSection from "@/app/components/layout/TrendingSection";
+import TrustBadges from "@/app/components/layout/TrustBadges";
 
 
 export default function Home() {

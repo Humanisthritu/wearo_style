@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import ProductCard from '@/components/product/ProductCard'
+import ProductCard from '@/app/components/product/ProductCard'
 import { api } from '@/services/api'
 
 
@@ -23,7 +23,7 @@ export default async function TrendingSection() {
 
         <Link
           href="/shop"
-          className="text-sm font-semibold text-[#ff3f6c] hover:underline"
+          className="text-sm font-semibold text-[#8e4440] hover:underline"
         >
           View all →
         </Link>

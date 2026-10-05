@@ -136,7 +136,7 @@ export default function LoginPage() {
     `w-full pl-10 pr-4 py-2.5 rounded-lg border text-sm outline-none transition-all
      ${hasErr
        ? 'border-red-300 bg-red-50 focus:border-red-400 text-red-900'
-       : 'border-gray-200 bg-gray-50 focus:border-[#ff3f6c] focus:bg-white text-gray-900'}`
+       : 'border-gray-200 bg-gray-50 focus:border-[#8e4440] focus:bg-white text-gray-900'}`
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4">
@@ -146,12 +146,12 @@ export default function LoginPage() {
         <div className="relative hidden lg:flex flex-col justify-between p-10 overflow-hidden"
           style={{ background: '#0f0f0f' }}>
           <div className="absolute top-0 left-0 w-56 h-56 rounded-full opacity-[0.12]"
-            style={{ background: 'radial-gradient(circle,#ff3f6c,transparent)', transform: 'translate(-40%,-40%)' }} />
+            style={{ background: 'radial-gradient(circle,#8e4440,transparent)', transform: 'translate(-40%,-40%)' }} />
           <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full opacity-[0.07]"
-            style={{ background: 'radial-gradient(circle,#ff3f6c,transparent)', transform: 'translate(40%,40%)' }} />
+            style={{ background: 'radial-gradient(circle,#8e4440,transparent)', transform: 'translate(40%,40%)' }} />
 
           <Link href="/" className="relative z-10 text-xl font-medium text-white">
-            Drip<span className="text-[#ff3f6c]">Kart</span>
+            Drip<span className="text-[#8e4440]">Kart</span>
           </Link>
 
           <div className="relative z-10">
@@ -167,7 +167,7 @@ export default function LoginPage() {
               { icon: <CardGiftcardOutlinedIcon fontSize="small" />,   text: 'Exclusive member deals' },
             ].map((p) => (
               <div key={p.text} className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[#ff3f6c]"
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[#8e4440]"
                   style={{ background: 'rgba(255,63,108,0.12)' }}>
                   {p.icon}
                 </div>
@@ -178,18 +178,18 @@ export default function LoginPage() {
 
           
           <button onClick={handleDemoLogin} disabled={loading}
-            className="relative z-10 rounded-xl p-3.5 border text-left w-full transition-all hover:border-[#ff3f6c]/40 disabled:opacity-60"
+            className="relative z-10 rounded-xl p-3.5 border text-left w-full transition-all hover:border-[#8e4440]/40 disabled:opacity-60"
             style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
             <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider mb-2">
               🧪 Demo account · click to sign in
             </p>
             <div className="flex justify-between text-xs mb-1">
               <span className="text-gray-500">username</span>
-              <span className="text-[#ff3f6c] font-mono">{DEMO_CREDENTIALS.username}</span>
+              <span className="text-[#8e4440] font-mono">{DEMO_CREDENTIALS.username}</span>
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-500">password</span>
-              <span className="text-[#ff3f6c] font-mono">{DEMO_CREDENTIALS.password}</span>
+              <span className="text-[#8e4440] font-mono">{DEMO_CREDENTIALS.password}</span>
             </div>
           </button>
         </div>
@@ -200,7 +200,7 @@ export default function LoginPage() {
             {[['login', 'Sign in'], ['register', 'Create account']].map(([t, label]) => (
               <button key={t} onClick={() => switchTab(t)}
                 className={`mr-5 pb-2.5 text-sm font-medium border-b-2 transition-all -mb-px
-                  ${tab === t ? 'text-[#ff3f6c] border-[#ff3f6c]' : 'text-gray-400 border-transparent hover:text-gray-700'}`}>
+                  ${tab === t ? 'text-[#8e4440] border-[#8e4440]' : 'text-gray-400 border-transparent hover:text-gray-700'}`}>
                 {label}
               </button>
             ))}
@@ -254,22 +254,22 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
                   <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-[#ff3f6c]" />
+                    className="w-3.5 h-3.5 accent-[#8e4440]" />
                   Remember me
                 </label>
                 <button type="button" onClick={() => showToast('Reset email sent! 📧')}
-                  className="text-xs text-[#ff3f6c] hover:underline">
+                  className="text-xs text-[#8e4440] hover:underline">
                   Forgot password?
                 </button>
               </div>
 
               <button type="submit" disabled={loading}
-                className="w-full py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-55 flex items-center justify-center gap-2">
+                className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-55 flex items-center justify-center gap-2">
                 {loading && <Spin />} {loading ? 'Signing in…' : 'Sign in'}
               </button>
 
               <button type="button" onClick={handleDemoLogin} disabled={loading}
-                className="w-full py-2.5 text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg hover:border-[#ff3f6c] hover:text-[#ff3f6c] transition-all disabled:opacity-50 flex items-center justify-center gap-1.5">
+                className="w-full py-2.5 text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg hover:border-[#8e4440] hover:text-[#8e4440] transition-all disabled:opacity-50 flex items-center justify-center gap-1.5">
                 {loading ? <Spin /> : '🧪'} Use demo account
               </button>
 
@@ -279,7 +279,7 @@ export default function LoginPage() {
               <p className="text-xs text-center text-gray-400">
                 No account?{' '}
                 <button type="button" onClick={() => switchTab('register')}
-                  className="text-[#ff3f6c] font-medium hover:underline">
+                  className="text-[#8e4440] font-medium hover:underline">
                   Create one free
                 </button>
               </p>
@@ -378,15 +378,15 @@ export default function LoginPage() {
 
               <label className="flex items-start gap-2 text-xs text-gray-500 cursor-pointer select-none">
                 <input type="checkbox" checked={rTerms} onChange={(e) => setRTerms(e.target.checked)}
-                  className="w-3.5 h-3.5 mt-0.5 accent-[#ff3f6c] shrink-0" />
+                  className="w-3.5 h-3.5 mt-0.5 accent-[#8e4440] shrink-0" />
                 I agree to the{' '}
-                <span className="text-[#ff3f6c] ml-0.5 hover:underline">Terms</span>
+                <span className="text-[#8e4440] ml-0.5 hover:underline">Terms</span>
                 &nbsp;and&nbsp;
-                <span className="text-[#ff3f6c] hover:underline">Privacy Policy</span>
+                <span className="text-[#8e4440] hover:underline">Privacy Policy</span>
               </label>
 
               <button type="submit"
-                className="w-full py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors">
+                className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors">
                 Create account
               </button>
 
@@ -396,7 +396,7 @@ export default function LoginPage() {
               <p className="text-xs text-center text-gray-400">
                 Already have an account?{' '}
                 <button type="button" onClick={() => switchTab('login')}
-                  className="text-[#ff3f6c] font-medium hover:underline">Sign in</button>
+                  className="text-[#8e4440] font-medium hover:underline">Sign in</button>
               </p>
             </form>
           )}

@@ -116,7 +116,7 @@ export default function ReviewsSection({ product }) {
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   placeholder="Rahul S."
-                  className="rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#ff3f6c] transition-colors"
+                  className="rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#8e4440] transition-colors"
                 />
               </div>
 
@@ -129,13 +129,13 @@ export default function ReviewsSection({ product }) {
                   onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))}
                   placeholder="How was the fit, quality, and delivery?"
                   rows={3}
-                  className="rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#ff3f6c] transition-colors resize-none"
+                  className="rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#8e4440] transition-colors resize-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-[#ff3f6c] py-2.5 text-sm font-bold text-white hover:bg-[#e03560] transition-colors"
+                className="w-full rounded-xl bg-[#8e4440] py-2.5 text-sm font-bold text-white hover:bg-[#e03560] transition-colors"
               >
                 Submit Review
               </button>
@@ -165,7 +165,7 @@ function ReviewCard({ review }) {
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           {/* Avatar */}
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ff3f6c] to-rose-400 flex items-center justify-center text-white text-sm font-bold shrink-0">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8e4440] to-rose-400 flex items-center justify-center text-white text-sm font-bold shrink-0">
             {review.reviewerName?.charAt(0).toUpperCase() ?? '?'}
           </div>
           <div>

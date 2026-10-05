@@ -3,8 +3,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { getSession, clearSession } from '@/utils/auth'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
+import Navbar from '@/app/components/layout/Navbar'
+import Footer from '@/app/components/layout/Footer'
 
 export default function LayoutClient({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)

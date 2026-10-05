@@ -23,7 +23,7 @@ export default function HeroSection() {
             <SwiperSlide key={index}>
               <div className="relative w-full">
                 <Image
-                  src="/Banner1.png"
+                  src="/images/banner1.png"
                   alt="home-slider"
                   width={1344}
                   height={514}
@@ -32,7 +32,7 @@ export default function HeroSection() {
                 />
 
                 {/* CTA Overlay */}
-                <div className="absolute inset-0 flex items-end sm:items-end items-center justify-center sm:justify-start px-4 sm:px-10 pb-6 sm:pb-10">
+                {/* <div className="absolute inset-0 flex items-end sm:items-end items-center justify-center sm:justify-start px-4 sm:px-10 pb-6 sm:pb-10">
                   <button className="bg-black text-white text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-gray-800 transition">
                     {index === 0
                       ? 'Shop Now'
@@ -40,7 +40,7 @@ export default function HeroSection() {
                       ? 'Explore'
                       : 'View Collection'}
                   </button>
-                </div>
+                </div> */}
               </div>
             </SwiperSlide>
           ))}

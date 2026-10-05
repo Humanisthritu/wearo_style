@@ -8,7 +8,7 @@ import { addToCart } from '@/redux/slices/cartSlice'
 import { toggleWishlist, selectIsWishlisted } from '@/redux/slices/wishlistSlice'
 import { useToast } from '@/context/AppContext'
 import { formatPrice, getDiscountedPrice } from '@/utils'
-import ProductCard from '@/components/product/ProductCard'
+import ProductCard from '@/app/components/product/ProductCard'
 import ReviewsSection from './ReviewsSection'
 import ImageGallery from './ImageGallery'
 
@@ -88,13 +88,13 @@ export default function ProductDetailClient({ product, similarProducts }) {
       {/* ── Breadcrumb ── */}
       <div className="border-b border-gray-100 bg-white">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-          <Link href="/"    className="hover:text-[#ff3f6c] transition-colors">Home</Link>
+          <Link href="/"    className="hover:text-[#8e4440] transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/shop" className="hover:text-[#ff3f6c] transition-colors">Shop</Link>
+          <Link href="/shop" className="hover:text-[#8e4440] transition-colors">Shop</Link>
           <span>/</span>
           <Link
             href={`/shop?category=${product.category}`}
-            className="hover:text-[#ff3f6c] transition-colors capitalize"
+            className="hover:text-[#8e4440] transition-colors capitalize"
           >
             {product.category.replace(/-/g, ' ')}
           </Link>
@@ -121,7 +121,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
                 {product.brand}
               </span>
               {discount > 0 && (
-                <span className="rounded-full bg-[#fff0f3] text-[#ff3f6c] text-xs font-bold px-2.5 py-0.5">
+                <span className="rounded-full bg-[#fff0f3] text-[#8e4440] text-xs font-bold px-2.5 py-0.5">
                   {discount}% OFF
                 </span>
               )}
@@ -144,7 +144,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
               <span className="text-sm text-gray-400">
                 ({product.reviews?.length ?? Math.floor(product.rating * 20)} reviews)
               </span>
-              <span className="text-sm text-[#ff3f6c] font-semibold">
+              <span className="text-sm text-[#8e4440] font-semibold">
                 🔥 {product.stock * 3}+ sold this week
               </span>
             </div>
@@ -208,7 +208,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
                   Size:&nbsp;
                   <span className="font-normal text-gray-500">{selectedSize}</span>
                 </span>
-                <button className="text-xs text-[#ff3f6c] font-semibold underline underline-offset-2 hover:no-underline">
+                <button className="text-xs text-[#8e4440] font-semibold underline underline-offset-2 hover:no-underline">
                   Size Guide
                 </button>
               </div>}
@@ -271,7 +271,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
               <button
                 onClick={handleBuyNow}
                 disabled={product.stock === 0}
-                className="flex-1 rounded-2xl bg-[#ff3f6c] py-3.5 text-sm font-bold text-white transition-all hover:bg-[#e03560] shadow-lg shadow-rose-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex-1 rounded-2xl bg-[#8e4440] py-3.5 text-sm font-bold text-white transition-all hover:bg-[#e03560] shadow-lg shadow-rose-200 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 ⚡ Buy Now
               </button>
@@ -281,7 +281,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
             <div className="flex gap-3">
               <button
                 onClick={handleWishlist}
-                className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-gray-100 bg-white py-3 text-sm font-semibold text-gray-700 hover:border-[#ff3f6c] hover:text-[#ff3f6c] transition-all"
+                className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-gray-100 bg-white py-3 text-sm font-semibold text-gray-700 hover:border-[#8e4440] hover:text-[#8e4440] transition-all"
               >
                 {isWishlisted ? '❤️' : '🤍'}
                 {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
@@ -322,7 +322,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
                 className={`
                   whitespace-nowrap px-6 py-3.5 text-sm font-semibold capitalize border-b-2 transition-all
                   ${activeTab === tab
-                    ? 'border-[#ff3f6c] text-[#ff3f6c]'
+                    ? 'border-[#8e4440] text-[#8e4440]'
                     : 'border-transparent text-gray-500 hover:text-gray-800'}
                 `}
               >
@@ -347,7 +347,7 @@ export default function ProductDetailClient({ product, similarProducts }) {
               <h2 className="text-xl font-bold">You May Also Like</h2>
               <Link
                 href={`/shop?category=${product.category}`}
-                className="text-sm text-[#ff3f6c] font-semibold hover:underline"
+                className="text-sm text-[#8e4440] font-semibold hover:underline"
               >
                 View all →
               </Link>

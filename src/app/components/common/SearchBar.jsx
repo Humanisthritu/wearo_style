@@ -50,7 +50,7 @@ export default function SearchBar({ onSearch }) {
 
   return (
     <div className="search-wrapper relative w-full">
-      <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50 focus-within:border-[#ff3f6c] focus-within:bg-white transition-all">
+      <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50 focus-within:border-[#8e4440] focus-within:bg-white transition-all">
         <span className="pl-3 text-gray-400 text-sm">🔍</span>
 
         <input

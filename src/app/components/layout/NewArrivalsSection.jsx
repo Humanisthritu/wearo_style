@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import ProductCard from '@/components/product/ProductCard'
+import ProductCard from '@/app/components/product/ProductCard'
 import { api } from '@/services/api'
 
 
@@ -16,7 +16,7 @@ export default async function NewArrivalsSection() {
           <h2 className="section-title">New Arrivals ✨</h2>
           <p className="text-sm text-gray-500 mt-1">Fresh styles, just dropped</p>
         </div>
-        <Link href="/shop?tag=new" className="text-sm text-[#ff3f6c] font-semibold hover:underline">
+        <Link href="/shop?tag=new" className="text-sm text-[#8e4440] font-semibold hover:underline">
           View all →
         </Link>
       </div>

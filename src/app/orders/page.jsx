@@ -81,7 +81,7 @@ export default function OrdersPage() {
             <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-gray-500">
                 <ReceiptLongOutlinedIcon style={{ fontSize: 48, color: '#e5e7eb' }} />
                 <p className="font-medium text-gray-700">Please login to view your orders</p>
-                <Link href="/login" className="px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg">Sign in</Link>
+                <Link href="/login" className="px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg">Sign in</Link>
             </div>
         )
     }
@@ -133,7 +133,7 @@ export default function OrdersPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by order ID or product name…"
-                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 bg-gray-50 rounded-xl text-sm text-gray-900 outline-none focus:border-[#ff3f6c] focus:bg-white transition-colors"
+                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 bg-gray-50 rounded-xl text-sm text-gray-900 outline-none focus:border-[#8e4440] focus:bg-white transition-colors"
                 />
             </div>
 
@@ -155,7 +155,7 @@ export default function OrdersPage() {
                 <div className="text-center py-16 text-gray-400">
                     <ReceiptLongOutlinedIcon style={{ fontSize: 44, color: '#e5e7eb' }} />
                     <p className="mt-3 font-medium text-gray-600">No orders found</p>
-                    <Link href="/shop" className="mt-4 inline-block px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg">
+                    <Link href="/shop" className="mt-4 inline-block px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg">
                         Start shopping
                     </Link>
                 </div>

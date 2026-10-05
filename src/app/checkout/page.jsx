@@ -100,7 +100,7 @@ export default function CheckoutPage() {
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <p className="text-gray-500">Please login to continue to checkout</p>
         <Link href="/login?from=/checkout"
-          className="px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl">
+          className="px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-xl">
           Sign in
         </Link>
       </div>
@@ -111,7 +111,7 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <p className="text-gray-500">Your cart is empty</p>
-        <Link href="/shop" className="px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl">
+        <Link href="/shop" className="px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-xl">
           Shop now
         </Link>
       </div>
@@ -213,11 +213,11 @@ export default function CheckoutPage() {
               <div className="flex flex-col items-center gap-1.5">
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all
                   ${done ? 'bg-green-500 border-green-500 text-white'
-                    : active ? 'bg-[#ff3f6c] border-[#ff3f6c] text-white'
+                    : active ? 'bg-[#8e4440] border-[#8e4440] text-white'
                       : 'bg-white border-gray-200 text-gray-400'}`}>
                   {done ? <CheckCircleIcon style={{ fontSize: 18 }} /> : s.icon}
                 </div>
-                <span className={`text-[11px] font-medium ${active ? 'text-[#ff3f6c]' : done ? 'text-green-600' : 'text-gray-400'}`}>
+                <span className={`text-[11px] font-medium ${active ? 'text-[#8e4440]' : done ? 'text-green-600' : 'text-gray-400'}`}>
                   {s.label}
                 </span>
               </div>
@@ -237,7 +237,7 @@ export default function CheckoutPage() {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Order Placed! 🎉</h1>
           <p className="text-gray-500 mb-1">Your order has been confirmed</p>
-          <p className="text-sm font-mono font-bold text-[#ff3f6c] mb-6">#{orderId}</p>
+          <p className="text-sm font-mono font-bold text-[#8e4440] mb-6">#{orderId}</p>
 
           {orderSummary && (
             <>
@@ -282,7 +282,7 @@ export default function CheckoutPage() {
               Track order
             </Link>
             <Link href="/shop"
-              className="flex-1 py-3 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors text-center">
+              className="flex-1 py-3 bg-[#8e4440] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors text-center">
               Continue shopping
             </Link>
           </div>
@@ -300,7 +300,7 @@ export default function CheckoutPage() {
             {step === 1 && (
               <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
                 <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100">
-                  <LocationOnOutlinedIcon fontSize="small" className="text-[#ff3f6c]" />
+                  <LocationOnOutlinedIcon fontSize="small" className="text-[#8e4440]" />
                   <h2 className="text-sm font-semibold text-gray-900">Delivery Address</h2>
                 </div>
 
@@ -310,14 +310,14 @@ export default function CheckoutPage() {
                     <label key={addr.id}
                       className={`flex gap-4 p-4 rounded-xl border cursor-pointer transition-all
                         ${selectedAddressId === addr.id && !showNewAddr
-                          ? 'border-[#ff3f6c] bg-[#fff0f3]'
+                          ? 'border-[#8e4440] bg-[#fff0f3]'
                           : 'border-gray-100 hover:border-gray-200'}`}
                       onClick={() => { setSelectedAddressId(addr.id); setShowNewAddr(false) }}
                     >
                       <input type="radio" name="address" value={addr.id}
                         checked={selectedAddressId === addr.id && !showNewAddr}
                         onChange={() => { }}
-                        className="mt-0.5 accent-[#ff3f6c] shrink-0" />
+                        className="mt-0.5 accent-[#8e4440] shrink-0" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full
@@ -325,7 +325,7 @@ export default function CheckoutPage() {
                             {addr.label === 'Home' ? <HomeOutlinedIcon style={{ fontSize: 10 }} /> : <WorkOutlineIcon style={{ fontSize: 10 }} />} {addr.label}
                           </span>
                           {addr.isDefault && (
-                            <span className="text-[10px] text-[#ff3f6c] font-semibold">Default</span>
+                            <span className="text-[10px] text-[#8e4440] font-semibold">Default</span>
                           )}
                         </div>
                         <p className="text-sm font-semibold text-gray-900">{addr.name}</p>
@@ -339,7 +339,7 @@ export default function CheckoutPage() {
                   {/* Add new address toggle */}
                   <button onClick={() => { setShowNewAddr((v) => !v); setSelectedAddressId(null) }}
                     className={`flex items-center gap-2 p-4 rounded-xl border transition-all text-sm font-medium
-                      ${showNewAddr ? 'border-[#ff3f6c] bg-[#fff0f3] text-[#ff3f6c]' : 'border-dashed border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+                      ${showNewAddr ? 'border-[#8e4440] bg-[#fff0f3] text-[#8e4440]' : 'border-dashed border-gray-200 text-gray-500 hover:border-gray-400'}`}>
                     <AddIcon fontSize="small" /> Add a new address
                   </button>
 
@@ -397,12 +397,12 @@ export default function CheckoutPage() {
                       {DELIVERY_OPTIONS.map((opt) => (
                         <label key={opt.id}
                           className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all
-                            ${delivery === opt.id ? 'border-[#ff3f6c] bg-[#fff0f3]' : 'border-gray-100 hover:border-gray-200'}`}>
+                            ${delivery === opt.id ? 'border-[#8e4440] bg-[#fff0f3]' : 'border-gray-100 hover:border-gray-200'}`}>
                           <input type="radio" name="delivery" value={opt.id}
                             checked={delivery === opt.id} onChange={() => setDelivery(opt.id)}
-                            className="accent-[#ff3f6c]" />
+                            className="accent-[#8e4440]" />
                           <LocalShippingOutlinedIcon fontSize="small"
-                            className={delivery === opt.id ? 'text-[#ff3f6c]' : 'text-gray-400'} />
+                            className={delivery === opt.id ? 'text-[#8e4440]' : 'text-gray-400'} />
                           <div className="flex-1">
                             <p className="text-sm font-medium text-gray-900">{opt.label}</p>
                             <p className="text-xs text-gray-500">{opt.sub}</p>
@@ -420,7 +420,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <button onClick={handleAddressContinue}
-                    className="w-full py-3 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors mt-1">
+                    className="w-full py-3 bg-[#8e4440] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors mt-1">
                     Continue to Payment →
                   </button>
                 </div>
@@ -432,7 +432,7 @@ export default function CheckoutPage() {
               <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
                   <div className="flex items-center gap-2">
-                    <PaymentOutlinedIcon fontSize="small" className="text-[#ff3f6c]" />
+                    <PaymentOutlinedIcon fontSize="small" className="text-[#8e4440]" />
                     <h2 className="text-sm font-semibold text-gray-900">Payment Method</h2>
                   </div>
                   <button onClick={() => setStep(1)}
@@ -464,7 +464,7 @@ export default function CheckoutPage() {
                       <button key={m.id} onClick={() => setPayMethod(m.id)}
                         className={`py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1
                           ${payMethod === m.id
-                            ? 'border-[#ff3f6c] bg-[#fff0f3] text-[#ff3f6c]'
+                            ? 'border-[#8e4440] bg-[#fff0f3] text-[#8e4440]'
                             : 'border-gray-100 text-gray-600 hover:border-gray-300'}`}>
                         <span className="text-lg">{m.icon}</span> {m.label}
                       </button>
@@ -511,7 +511,7 @@ export default function CheckoutPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <input type="checkbox" id="save-card" className="accent-[#ff3f6c] w-3.5 h-3.5" />
+                        <input type="checkbox" id="save-card" className="accent-[#8e4440] w-3.5 h-3.5" />
                         <label htmlFor="save-card" className="text-xs text-gray-500 cursor-pointer">
                           Save this card for future payments
                         </label>
@@ -531,7 +531,7 @@ export default function CheckoutPage() {
                       <div className="flex items-center gap-3">
                         {['PhonePe', 'GPay', 'Paytm', 'BHIM'].map((app) => (
                           <button key={app} onClick={() => showToast(`Opening ${app}…`)}
-                            className="flex-1 py-2 border border-gray-100 rounded-lg text-xs text-gray-600 hover:border-[#ff3f6c] hover:text-[#ff3f6c] transition-colors">
+                            className="flex-1 py-2 border border-gray-100 rounded-lg text-xs text-gray-600 hover:border-[#8e4440] hover:text-[#8e4440] transition-colors">
                             {app}
                           </button>
                         ))}
@@ -544,7 +544,7 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-3 gap-2">
                       {['HDFC', 'SBI', 'ICICI', 'Axis', 'Kotak', 'Others'].map((bank) => (
                         <button key={bank}
-                          className="py-2.5 border border-gray-100 rounded-xl text-xs font-medium text-gray-600 hover:border-[#ff3f6c] hover:text-[#ff3f6c] transition-colors">
+                          className="py-2.5 border border-gray-100 rounded-xl text-xs font-medium text-gray-600 hover:border-[#8e4440] hover:text-[#8e4440] transition-colors">
                           {bank}
                         </button>
                       ))}
@@ -567,7 +567,7 @@ export default function CheckoutPage() {
 
                   {/* Place order button */}
                   <button onClick={handlePlaceOrder} disabled={processing}
-                    className="w-full mt-4 py-3.5 bg-[#ff3f6c] text-white text-sm font-semibold rounded-xl hover:bg-[#e03560] transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
+                    className="w-full mt-4 py-3.5 bg-[#8e4440] text-white text-sm font-semibold rounded-xl hover:bg-[#e03560] transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
                     {processing ? <><Spin /> Processing payment…</> : `Pay ${formatPrice(grandTotal + (payMethod === 'cod' ? 50 : 0))} →`}
                   </button>
                 </div>
@@ -654,7 +654,7 @@ const labelCls = 'text-[10px] font-medium text-gray-400 uppercase tracking-wider
 
 const inputCls = (error) =>
   `w-full border rounded-xl px-3 py-2.5 text-sm text-gray-900 outline-none transition-colors bg-gray-50
-   ${error ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#ff3f6c] focus:bg-white'}`
+   ${error ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#8e4440] focus:bg-white'}`
 
 function Spin() {
   return (

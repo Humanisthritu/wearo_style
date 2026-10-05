@@ -66,7 +66,7 @@ export default function ProfilePage() {
             <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-gray-500">
                 <PersonOutlineIcon style={{ fontSize: 48, color: '#e5e7eb' }} />
                 <p className="font-medium text-gray-700">Please login to view your profile</p>
-                <Link href="/login" className="px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg">
+                <Link href="/login" className="px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg">
                     Sign in
                 </Link>
             </div>
@@ -155,7 +155,7 @@ export default function ProfilePage() {
                     {/* Cover */}
                     <div className="h-24 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 relative">
                         <div className="absolute inset-0 opacity-20"
-                            style={{ background: 'radial-gradient(circle at 30% 50%, #ff3f6c, transparent)' }} />
+                            style={{ background: 'radial-gradient(circle at 30% 50%, #8e4440, transparent)' }} />
                     </div>
 
                     <div className="px-6 pb-6">
@@ -166,11 +166,11 @@ export default function ProfilePage() {
                                     <img src={user.image} alt={user.firstName}
                                         className="w-20 h-20 rounded-2xl object-cover ring-4 ring-white shadow" />
                                 ) : (
-                                    <div className="w-20 h-20 rounded-2xl bg-[#ff3f6c] text-white text-2xl font-bold flex items-center justify-center ring-4 ring-white shadow">
+                                    <div className="w-20 h-20 rounded-2xl bg-[#8e4440] text-white text-2xl font-bold flex items-center justify-center ring-4 ring-white shadow">
                                         {initials}
                                     </div>
                                 )}
-                                <button onClick={handleOpenDialog} className="absolute -bottom-1 -right-1 w-6 h-6 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-[#ff3f6c] transition-colors">
+                                <button onClick={handleOpenDialog} className="absolute -bottom-1 -right-1 w-6 h-6 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-[#8e4440] transition-colors">
                                     <CameraAltOutlinedIcon style={{ fontSize: 12 }} />
                                 </button>
                             </div>
@@ -184,7 +184,7 @@ export default function ProfilePage() {
                                             <CloseOutlinedIcon fontSize="small" /> Cancel
                                         </button>
                                         <button onClick={handleSave} disabled={saving}
-                                            className="flex items-center gap-1.5 px-4 py-2 bg-[#ff3f6c] text-white text-xs font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-60">
+                                            className="flex items-center gap-1.5 px-4 py-2 bg-[#8e4440] text-white text-xs font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-60">
                                             {saving
                                                 ? <><Spin /> Saving…</>
                                                 : <><SaveOutlinedIcon fontSize="small" /> Save changes</>
@@ -241,7 +241,7 @@ export default function ProfilePage() {
                                                 onClick={() => set('gender', g.toLowerCase())}
                                                 className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-all
                         ${form.gender === g.toLowerCase()
-                                                        ? 'border-[#ff3f6c] bg-[#fff0f3] text-[#ff3f6c]'
+                                                        ? 'border-[#8e4440] bg-[#fff0f3] text-[#8e4440]'
                                                         : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
                                                 {g}
                                             </button>
@@ -324,7 +324,7 @@ function FormField({ label, value, onChange, editing, type = 'text' }) {
             {editing ? (
                 <input type={type} value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-[#ff3f6c] focus:bg-white transition-colors" />
+                    className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-[#8e4440] focus:bg-white transition-colors" />
             ) : (
                 <p className="text-sm text-gray-800 py-2 border border-transparent">
                     {value || <span className="text-gray-300">Not set</span>}

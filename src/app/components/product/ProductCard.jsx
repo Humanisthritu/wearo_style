@@ -2,7 +2,11 @@
 
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import { addToCart } from '@/redux/slices/cartSlice'
-import { toggleWishlist, selectIsWishlisted, removeFromWishlist } from '@/redux/slices/wishlistSlice'
+import {
+  toggleWishlist,
+  selectIsWishlisted,
+  removeFromWishlist,
+} from '@/redux/slices/wishlistSlice'
 import { useToast } from '@/context/AppContext'
 import { formatPrice, getDiscountedPrice } from '@/utils'
 import Link from 'next/link'
@@ -32,6 +36,7 @@ export default function ProductCard({ product }) {
         quantity: 1,
       })
     )
+
     dispatch(removeFromWishlist(product.id))
 
     showToast('Added to cart! 🛍️')
@@ -44,23 +49,30 @@ export default function ProductCard({ product }) {
     dispatch(toggleWishlist(product))
 
     showToast(
-      isWishlisted ? 'Removed from wishlist' : 'Added to wishlist! ❤️'
+      isWishlisted
+        ? 'Removed from wishlist'
+        : 'Added to wishlist! ❤️'
     )
   }
 
   return (
-    <Link href={`/product/${product.id}`} className="group relative overflow-hidden rounded-3xl bg-white shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 block">
-      <div className="group relative overflow-hidden rounded-3xl bg-white shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+    <Link
+      href={`/product/${product.id}`}
+      className="group block h-full"
+    >
+      <div className="relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+
         {/* Product Image */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+        <div className="relative h-[340px] w-full overflow-hidden bg-gray-100">
+
           <img
             src={product.thumbnail}
             alt={product.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
           />
 
           {/* Dark Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
           {/* Discount Badge */}
           {discount > 0 && (
@@ -74,7 +86,7 @@ export default function ProductCard({ product }) {
           {/* Wishlist */}
           <button
             onClick={handleWishlist}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 hover:bg-white"
+            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white"
           >
             <span className="text-lg">
               {isWishlisted ? '❤️' : '🤍'}
@@ -85,7 +97,7 @@ export default function ProductCard({ product }) {
           <div className="absolute bottom-4 left-4 right-4 translate-y-10 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
             <button
               onClick={handleAddToCart}
-              className="w-full rounded-2xl bg-white py-3 text-sm font-semibold text-gray-900 shadow-xl backdrop-blur-md hover:bg-gray-50"
+              className="w-full rounded-2xl bg-white py-3 text-sm font-semibold text-gray-900 shadow-xl hover:bg-gray-50"
             >
               Add to Cart
             </button>
@@ -93,16 +105,17 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* Product Details */}
-        <div className="p-4">
+        <div className="flex min-h-[116px] flex-1 flex-col p-4">
+
           <h3 className="line-clamp-1 text-sm font-semibold text-gray-900">
             {product.title}
           </h3>
 
-          <p className="mt-1 text-xs text-gray-500 capitalize">
-            {product.brand}
+          <p className="mt-1 min-h-[16px] text-xs capitalize text-gray-500">
+            {product.brand || ''}
           </p>
 
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-auto flex items-center gap-2 pt-3">
             <span className="text-lg font-bold text-gray-900">
               {formatPrice(discountedPrice)}
             </span>
@@ -122,6 +135,5 @@ export default function ProductCard({ product }) {
         </div>
       </div>
     </Link>
-
   )
 }

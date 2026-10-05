@@ -104,7 +104,7 @@ export default function CartPage() {
         <h2 className="text-xl font-medium text-gray-900">Your cart is empty</h2>
         <p className="text-sm text-gray-500">Add items from the shop or your wishlist</p>
         <div className="flex gap-3 mt-2">
-          <Link href="/shop" className="px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors">
+          <Link href="/shop" className="px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors">
             Shop now
           </Link>
           <Link href="/wishlist" className="px-5 py-2.5 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:border-gray-400 transition-colors">
@@ -126,7 +126,7 @@ export default function CartPage() {
         </div>
         <button
           onClick={() => { dispatch(clearCart()); showToast('Cart cleared') }}
-          className="text-sm text-gray-400 hover:text-[#ff3f6c] transition-colors"
+          className="text-sm text-gray-400 hover:text-[#8e4440] transition-colors"
         >
           Clear cart
         </button>
@@ -143,7 +143,7 @@ export default function CartPage() {
               type="checkbox"
               checked={allSelected}
               onChange={(e) => toggleAll(e.target.checked)}
-              className="w-3.5 h-3.5 accent-[#ff3f6c]"
+              className="w-3.5 h-3.5 accent-[#8e4440]"
               id="select-all"
             />
             <label htmlFor="select-all" className="text-xs text-gray-500 cursor-pointer select-none">
@@ -243,7 +243,7 @@ export default function CartPage() {
                   onChange={(e) => setCouponInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleCoupon()}
                   placeholder="Coupon code (DRIP20)"
-                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#ff3f6c] transition-colors bg-white"
+                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#8e4440] transition-colors bg-white"
                 />
                 <button
                   onClick={handleCoupon}
@@ -258,7 +258,7 @@ export default function CartPage() {
           {/* Checkout button */}
           <button
             onClick={() => router.push('/checkout')}
-            className="w-full mt-4 py-3 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors shadow-sm shadow-rose-100"
+            className="w-full mt-4 py-3 bg-[#8e4440] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors shadow-sm shadow-rose-100"
           >
             Proceed to checkout →
           </button>
@@ -280,7 +280,7 @@ export default function CartPage() {
           {/* Back to shop */}
           <Link
             href="/shop"
-            className="block text-center mt-4 text-xs text-gray-400 hover:text-[#ff3f6c] transition-colors"
+            className="block text-center mt-4 text-xs text-gray-400 hover:text-[#8e4440] transition-colors"
           >
             ← Continue shopping
           </Link>
@@ -303,7 +303,7 @@ function CartRow({ product, quantity, size, color, lineTotal, isSelected, onTogg
           type="checkbox"
           checked={isSelected}
           onChange={onToggle}
-          className="w-3.5 h-3.5 accent-[#ff3f6c] shrink-0"
+          className="w-3.5 h-3.5 accent-[#8e4440] shrink-0"
         />
         <Link href={`/product/${product.id}`} className="shrink-0">
           <div className="w-14 h-16 rounded-lg bg-gray-50 overflow-hidden">
@@ -312,7 +312,7 @@ function CartRow({ product, quantity, size, color, lineTotal, isSelected, onTogg
         </Link>
         <div className="min-w-0">
           <Link href={`/product/${product.id}`}>
-            <p className="text-xs font-medium text-gray-900 truncate hover:text-[#ff3f6c] transition-colors">
+            <p className="text-xs font-medium text-gray-900 truncate hover:text-[#8e4440] transition-colors">
               {product.title}
             </p>
           </Link>
@@ -321,7 +321,7 @@ function CartRow({ product, quantity, size, color, lineTotal, isSelected, onTogg
           </p>
           <button
             onClick={onMoveToWishlist}
-            className="mt-1.5 text-[10px] text-[#ff3f6c] hover:underline flex items-center gap-1"
+            className="mt-1.5 text-[10px] text-[#8e4440] hover:underline flex items-center gap-1"
           >
             🤍 Save for later
           </button>
@@ -356,7 +356,7 @@ function CartRow({ product, quantity, size, color, lineTotal, isSelected, onTogg
       </div>
 
       {/* Line total */}
-      <div className="text-xs font-medium text-[#ff3f6c] md:text-sm">
+      <div className="text-xs font-medium text-[#8e4440] md:text-sm">
         {formatPrice(lineTotal)}
       </div>
 

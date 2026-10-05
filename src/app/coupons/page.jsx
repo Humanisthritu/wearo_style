@@ -26,7 +26,7 @@ const COUPONS = [
         maxDiscount: 500,
         expiry: '2024-12-31',
         category: 'all',
-        color: { bg: '#fff0f3', border: '#ffd6df', accent: '#ff3f6c', tag: 'Most Popular' },
+        color: { bg: '#fff0f3', border: '#ffd6df', accent: '#8e4440', tag: 'Most Popular' },
     },
     {
         code: 'STYLE10',
@@ -184,10 +184,10 @@ export default function CouponsPage() {
                         onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                         onKeyDown={(e) => e.key === 'Enter' && handleManualApply()}
                         placeholder="Enter coupon code e.g. DRIP20"
-                        className="flex-1 border border-gray-200 bg-gray-50 rounded-xl px-4 py-2.5 text-sm font-mono uppercase tracking-widest text-gray-900 outline-none focus:border-[#ff3f6c] focus:bg-white transition-colors"
+                        className="flex-1 border border-gray-200 bg-gray-50 rounded-xl px-4 py-2.5 text-sm font-mono uppercase tracking-widest text-gray-900 outline-none focus:border-[#8e4440] focus:bg-white transition-colors"
                     />
                     <button onClick={handleManualApply}
-                        className="px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors">
+                        className="px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors">
                         Apply
                     </button>
                 </div>
@@ -195,7 +195,7 @@ export default function CouponsPage() {
 
             {/* Coupon cards */}
             <h2 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <LocalOfferOutlinedIcon fontSize="small" className="text-[#ff3f6c]" /> Available Coupons
+                <LocalOfferOutlinedIcon fontSize="small" className="text-[#8e4440]" /> Available Coupons
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -309,7 +309,7 @@ export default function CouponsPage() {
                     <p className="text-gray-400 text-sm">Apply your coupon at checkout</p>
                 </div>
                 <Link href="/shop"
-                    className="shrink-0 px-5 py-2.5 bg-[#ff3f6c] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors flex items-center gap-2">
+                    className="shrink-0 px-5 py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors flex items-center gap-2">
                     <ShoppingBagOutlinedIcon fontSize="small" /> Shop now
                 </Link>
             </div>

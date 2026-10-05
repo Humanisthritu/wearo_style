@@ -1,7 +1,7 @@
 'use client'
 
 import { api } from '@/services/api'
-import ProductCard from '@/components/product/ProductCard'
+import ProductCard from '@/app/components/product/ProductCard'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
