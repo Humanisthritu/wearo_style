@@ -1,7 +1,3 @@
-// src/utils/auth.js
-// FIX: every function that touches browser APIs (localStorage, document.cookie)
-// now guards with  typeof window !== 'undefined'
-// so they're safe to import in Server Components and during SSR.
 
 import { DEMO_CREDENTIALS } from "@/services/api"
 

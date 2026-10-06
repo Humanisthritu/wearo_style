@@ -1,82 +1,143 @@
-'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import { getSession, clearSession } from '@/utils/auth'
-import Navbar from '@/app/components/layout/Navbar'
-import Footer from '@/app/components/layout/Footer'
+"use client";
 
-export default function LayoutClient({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const pathname = usePathname()
- 
+import { useCallback, useEffect, useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
+import dynamic from "next/dynamic";
+import { usePathname, useRouter } from "next/navigation";
+import { getSession } from "@/utils/auth";
+import Footer from "../layout/Footer";
 
-  // Check authentication status
-  const checkAuth = useCallback(() => {
-    try {
-      const session = getSession()
-      setIsLoggedIn(!!session)
-    } catch (error) {
-      console.error('Auth check failed:', error)
-      setIsLoggedIn(false)
-    } finally {
-      setIsLoading(false)
+
+
+const DynamicComponentTopbar = dynamic(
+  () => import("../layout/Navbar"),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicComponentFooter = dynamic(
+  () => import("../layout/Footer"),
+  {
+    ssr: false,
+  }
+);
+
+const LayoutClient = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+  const [hideSidebarMenu, setHideSidebarMenu] = useState(false);
+  const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const login = localStorage.getItem('dripkart_session')
+    if (!login) {
+      router.push('/login')
     }
+    setIsLoading(false);
   }, [])
 
-  // Initial auth check
-  useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
 
-  // Listen for storage events (when user logs in/out in another tab)
+  const pathname = usePathname();
+
+  const checkAuth = useCallback(() => {
+    try {
+      const session = getSession();
+
+      setIsLoggedIn(!!session);
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      setIsLoggedIn(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [pathname, checkAuth]);
+
   useEffect(() => {
     const handleStorageChange = (e) => {
-      if (e.key === 'dripkart_session') {
-        checkAuth()
+      if (e.key === "dripkart_session") {
+        checkAuth();
       }
-    }
+    };
 
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
-  }, [checkAuth])
+    window.addEventListener("storage", handleStorageChange);
 
-  // Check auth when route changes (useful for protected routes)
-  useEffect(() => {
-    checkAuth()
-  }, [pathname, checkAuth])
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [checkAuth]);
 
-  // Public routes that shouldn't show Navbar/Footer
-  const publicRoutes = ['/login', '/register', '/forgot-password']
-  const isPublicRoute = publicRoutes.some(route => pathname === route)
-  
-  // Also check if it's an auth-related route (starts with /auth/)
-  const isAuthRoute = pathname.startsWith('/auth/')
-  
-  const showNavigation = isLoggedIn && !isPublicRoute 
 
-  // Show loading spinner while checking auth
+  const showNavigation = isLoggedIn 
+
+  // Loading screen while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <CircularProgress />
       </div>
-    )
+    );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {showNavigation && <Navbar />}
-      
-      <main className={`flex-1 ${showNavigation ? 'pt-1' : ''}`}>
-        {children}
-      </main>
-      
-      {showNavigation && <Footer />}
-    </div>
-  )
-}
+    <>
+
+      <div style={{ boxSizing: "border-box" }}>
+        {/* TOPBAR */}
+          {showNavigation && (
+            <DynamicComponentTopbar
+              hideSidebarMenu={hideSidebarMenu}
+              toggle={toggle}
+              setToggle={setToggle}
+            />
+          )}
+
+        <div
+          className="app"
+          style={{
+            display: "flex",
+            position: "relative",
+            paddingTop: showNavigation ? "4rem" : "0rem",
+          }}
+        >
+
+          {/* PAGE CONTENT */}
+          <Box
+            sx={{
+              width: "100%",
+              marginLeft: {
+                xs: "0px",
+                md: showNavigation ? "20px" : "0rem",
+              },
+              overflowY: showNavigation ? "auto" : "hidden",
+            }}
+          >
+            {children}
+          </Box>
+        </div>
+          {showNavigation && (
+            <DynamicComponentFooter
+              hideSidebarMenu={hideSidebarMenu}
+              toggle={toggle}
+              setToggle={setToggle}
+            />
+          )}
+
+      </div>
+    </>
+  );
+};
+
+export default LayoutClient;
+

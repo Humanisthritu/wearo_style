@@ -31,9 +31,7 @@ export default function RootLayout({ children }) {
           <AppProvider>
             <AuthProvider>
               <LayoutClient>
-                <Navbar />
-                <main className="min-h-screen">{children}</main>
-                <Footer />
+                {children}
               </LayoutClient>
             </AuthProvider>
           </AppProvider>

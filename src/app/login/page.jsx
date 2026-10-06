@@ -1,9 +1,8 @@
 'use client'
-// src/app/login/page.js
-// FIX: useEffect has empty deps [] so it only runs once after hydration.
-// Adding router/dispatch to deps would re-run it on every render change.
 
 import { useState, useEffect } from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAppDispatch } from '@/hooks/redux'
@@ -19,6 +18,27 @@ import AirportShuttleOutlinedIcon from '@mui/icons-material/AirportShuttleOutlin
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined'
 import CardGiftcardOutlinedIcon from '@mui/icons-material/CardGiftcardOutlined'
 
+const loginSchema = Yup.object({
+  emailOrUsername: Yup.string().trim().required('Email or username is required'),
+  password: Yup.string().required('Password is required'),
+})
+
+const registerSchema = Yup.object({
+  firstName: Yup.string().trim().required('First name is required'),
+  lastName: Yup.string().trim().required('Last name is required'),
+  email: Yup.string().trim().email('Enter a valid email address').required('Email is required'),
+  phone: Yup.string()
+    .matches(/^\d{10}$/, 'Enter a valid 10-digit mobile number')
+    .required('Mobile number is required'),
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords do not match')
+    .required('Please confirm your password'),
+  terms: Yup.boolean().oneOf([true], 'Please agree to the Terms & Privacy Policy'),
+})
+
 export default function LoginPage() {
   const router        = useRouter()
   const dispatch      = useAppDispatch()
@@ -27,36 +47,47 @@ export default function LoginPage() {
   const [tab, setTab]           = useState('login')
   const [loading, setLoading]   = useState(false)
   const [showPass, setShowPass] = useState(false)
-  const [errors,   setErrors]   = useState({})
+  const [formError, setFormError] = useState('')
   const [success,  setSuccess]  = useState('')
 
-  const [lUser,    setLUser]    = useState('')
-  const [lPass,    setLPass]    = useState('')
   const [remember, setRemember] = useState(false)
 
-  const [rFirst,    setRFirst]    = useState('')
-  const [rLast,     setRLast]     = useState('')
-  const [rEmail,    setREmail]    = useState('')
-  const [rPhone,    setRPhone]    = useState('')
-  const [rPass,     setRPass]     = useState('')
-  const [rConf,     setRConf]     = useState('')
-  const [rTerms,    setRTerms]    = useState(false)
   const [showRPass, setShowRPass] = useState(false)
   const [showCPass, setShowCPass] = useState(false)
 
-  // ── FIX: empty deps array [] — runs once after hydration, not on every render
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const loginFormik = useFormik({
+    initialValues: { emailOrUsername: '', password: '' },
+    validationSchema: loginSchema,
+    onSubmit: ({ emailOrUsername, password }) => attemptLogin(emailOrUsername.trim(), password),
+  })
+
+  const registerFormik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      terms: false,
+    },
+    validationSchema: registerSchema,
+    onSubmit: handleRegister,
+  })
+
+  
   useEffect(() => {
-    const session = getSession()   // safe: only runs client-side inside useEffect
+    const session = getSession()   
     if (session) {
       dispatch(loginSuccess(session))
       router.replace('/')
     }
-  }, [])  // ← intentionally empty — we only want this to run once on mount
+  }, []) 
 
-  function clear() { setErrors({}); setSuccess('') }
+  function clear() { setFormError(''); setSuccess('') }
   function switchTab(t) { setTab(t); clear() }
 
+  const { password: rPass } = registerFormik.values
   const pwChecks = {
     length:    rPass.length >= 8,
     uppercase: /[A-Z]/.test(rPass),
@@ -67,14 +98,12 @@ export default function LoginPage() {
   const pwWidths = ['25%', '25%', '60%', '100%']
 
   // ── Core login — shared by form submit and demo button ────────────────────
-   function attemptLogin(emailOrUsername, password) {
+  function attemptLogin(emailOrUsername, password) {
     clear()
-    setLoading(true)
-    const result =  loginUser({ emailOrUsername, password })
-    setLoading(false)
+    const result = loginUser({ emailOrUsername, password })
 
     if (!result.success) {
-      setErrors({ general: result.error })
+      setFormError(result.error)
       return false
     }
 
@@ -85,46 +114,28 @@ export default function LoginPage() {
     return true
   }
 
-  async function handleLogin(e) {
-    e.preventDefault()
-    if (!lUser.trim()) { setErrors({ general: 'Email or username is required' }); return }
-    if (!lPass)        { setErrors({ general: 'Password is required' }); return }
-    await attemptLogin(lUser.trim(), lPass)
-  }
-
   async function handleDemoLogin() {
-    setLUser(DEMO_CREDENTIALS.username)
-    setLPass(DEMO_CREDENTIALS.password)
-    await attemptLogin(DEMO_CREDENTIALS.username, DEMO_CREDENTIALS.password)
+    loginFormik.setValues({
+      emailOrUsername: DEMO_CREDENTIALS.username,
+      password: DEMO_CREDENTIALS.password,
+    })
+    setLoading(true)
+    attemptLogin(DEMO_CREDENTIALS.username, DEMO_CREDENTIALS.password)
+    setLoading(false)
   }
 
-  function handleRegister(e) {
-    e.preventDefault()
+  function handleRegister(values) {
     clear()
 
-    if (!rFirst.trim()) { setErrors({ general: 'First name is required' }); return }
-    if (!rLast.trim())  { setErrors({ general: 'Last name is required' }); return }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rEmail)) {
-      setErrors({ general: 'Enter a valid email address' }); return
-    }
-    if (rPhone.replace(/\D/g, '').length < 10) {
-      setErrors({ general: 'Enter a valid 10-digit mobile number' }); return
-    }
-    if (rPass.length < 8) {
-      setErrors({ general: 'Password must be at least 8 characters' }); return
-    }
-    if (rPass !== rConf) { setErrors({ general: 'Passwords do not match' }); return }
-    if (!rTerms)         { setErrors({ general: 'Please agree to the Terms & Privacy Policy' }); return }
-
     const result = registerUser({
-      firstName: rFirst.trim(),
-      lastName:  rLast.trim(),
-      email:     rEmail.trim(),
-      phone:     rPhone.replace(/\D/g, ''),
-      password:  rPass,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      email: values.email.trim(),
+      phone: values.phone,
+      password: values.password,
     })
 
-    if (!result.success) { setErrors({ general: result.error }); return }
+    if (!result.success) { setFormError(result.error); return }
 
     dispatch(loginSuccess(result.user))
     setSuccess(`Account created! Welcome, ${result.user.firstName}!`)
@@ -180,17 +191,8 @@ export default function LoginPage() {
           <button onClick={handleDemoLogin} disabled={loading}
             className="relative z-10 rounded-xl p-3.5 border text-left w-full transition-all hover:border-[#8e4440]/40 disabled:opacity-60"
             style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
-            <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider mb-2">
-              🧪 Demo account · click to sign in
-            </p>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-gray-500">username</span>
-              <span className="text-[#8e4440] font-mono">{DEMO_CREDENTIALS.username}</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-500">password</span>
-              <span className="text-[#8e4440] font-mono">{DEMO_CREDENTIALS.password}</span>
-            </div>
+           <p className="flex text-lg text-[#8e4440] mb-0.5 font-medium justify-center">LIVE EVERYDAY</p>
+            
           </button>
         </div>
 
@@ -206,9 +208,9 @@ export default function LoginPage() {
             ))}
           </div>
 
-          {errors.general && (
+          {formError && (
             <div className="mb-4 flex items-start gap-2 rounded-lg bg-red-50 border border-red-100 px-3.5 py-3 text-xs text-red-700">
-              <span className="shrink-0">⚠️</span><span>{errors.general}</span>
+              <span className="shrink-0">⚠️</span><span>{formError}</span>
             </div>
           )}
           {success && (
@@ -219,30 +221,32 @@ export default function LoginPage() {
 
           {/* ── LOGIN ── */}
           {tab === 'login' && (
-            <form onSubmit={handleLogin} noValidate className="flex flex-col gap-3.5">
+            <form onSubmit={loginFormik.handleSubmit} noValidate className="flex flex-col gap-3.5">
               <div>
                 <p className="text-lg font-medium text-gray-900 mb-0.5">Welcome back</p>
                 <p className="text-xs text-gray-400">Use your username or registered email</p>
               </div>
 
-              <Field label="Email or username">
+              <Field label="Email or username" error={loginFormik.touched.emailOrUsername && loginFormik.errors.emailOrUsername}>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
-                  <input type="text" value={lUser}
-                    onChange={(e) => { setLUser(e.target.value); clear() }}
+                  <input type="text" name="emailOrUsername" value={loginFormik.values.emailOrUsername}
+                    onChange={(e) => { setFormError(''); loginFormik.handleChange(e) }}
+                    onBlur={loginFormik.handleBlur}
                     placeholder="kminchelle  or  you@email.com"
-                    className={inputCls(errors.general && !lUser)}
+                    className={inputCls(loginFormik.touched.emailOrUsername && loginFormik.errors.emailOrUsername)}
                     autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
                 </div>
               </Field>
 
-              <Field label="Password">
+              <Field label="Password" error={loginFormik.touched.password && loginFormik.errors.password}>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔒</span>
-                  <input type={showPass ? 'text' : 'password'} value={lPass}
-                    onChange={(e) => { setLPass(e.target.value); clear() }}
+                  <input type={showPass ? 'text' : 'password'} name="password" value={loginFormik.values.password}
+                    onChange={(e) => { setFormError(''); loginFormik.handleChange(e) }}
+                    onBlur={loginFormik.handleBlur}
                     placeholder="Enter your password"
-                    className={inputCls(errors.general && !lPass) + ' pr-10'}
+                    className={inputCls(loginFormik.touched.password && loginFormik.errors.password) + ' pr-10'}
                     autoComplete="current-password" />
                   <button type="button" onClick={() => setShowPass((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -263,9 +267,9 @@ export default function LoginPage() {
                 </button>
               </div>
 
-              <button type="submit" disabled={loading}
+              <button type="submit" disabled={loading || loginFormik.isSubmitting}
                 className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-55 flex items-center justify-center gap-2">
-                {loading && <Spin />} {loading ? 'Signing in…' : 'Sign in'}
+                {(loading || loginFormik.isSubmitting) && <Spin />} {loading || loginFormik.isSubmitting ? 'Signing in…' : 'Sign in'}
               </button>
 
               <button type="button" onClick={handleDemoLogin} disabled={loading}
@@ -288,53 +292,64 @@ export default function LoginPage() {
 
           {/* ── REGISTER ── */}
           {tab === 'register' && (
-            <form onSubmit={handleRegister} noValidate className="flex flex-col gap-3">
+            <form onSubmit={registerFormik.handleSubmit} noValidate className="flex flex-col gap-3">
               <div>
                 <p className="text-lg font-medium text-gray-900 mb-0.5">Create account</p>
                 <p className="text-xs text-gray-400">Free forever. No credit card needed.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <Field label="First name">
+                <Field label="First name" error={registerFormik.touched.firstName && registerFormik.errors.firstName}>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
-                    <input type="text" value={rFirst} onChange={(e) => setRFirst(e.target.value)}
-                      placeholder="Rahul" className={inputCls()} autoComplete="given-name" />
+                    <input type="text" name="firstName" value={registerFormik.values.firstName}
+                      onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
+                      onBlur={registerFormik.handleBlur}
+                      placeholder="Rahul" className={inputCls(registerFormik.touched.firstName && registerFormik.errors.firstName)} autoComplete="given-name" />
                   </div>
                 </Field>
-                <Field label="Last name">
+                <Field label="Last name" error={registerFormik.touched.lastName && registerFormik.errors.lastName}>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
-                    <input type="text" value={rLast} onChange={(e) => setRLast(e.target.value)}
-                      placeholder="Sharma" className={inputCls()} autoComplete="family-name" />
+                    <input type="text" name="lastName" value={registerFormik.values.lastName}
+                      onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
+                      onBlur={registerFormik.handleBlur}
+                      placeholder="Sharma" className={inputCls(registerFormik.touched.lastName && registerFormik.errors.lastName)} autoComplete="family-name" />
                   </div>
                 </Field>
               </div>
 
-              <Field label="Email">
+              <Field label="Email" error={registerFormik.touched.email && registerFormik.errors.email}>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📧</span>
-                  <input type="email" value={rEmail} onChange={(e) => setREmail(e.target.value)}
-                    placeholder="you@example.com" className={inputCls()} autoComplete="email" />
+                  <input type="email" name="email" value={registerFormik.values.email}
+                    onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
+                    onBlur={registerFormik.handleBlur}
+                    placeholder="you@example.com" className={inputCls(registerFormik.touched.email && registerFormik.errors.email)} autoComplete="email" />
                 </div>
               </Field>
 
-              <Field label="Mobile">
+              <Field label="Mobile" error={registerFormik.touched.phone && registerFormik.errors.phone}>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📱</span>
-                  <input type="tel" value={rPhone}
-                    onChange={(e) => setRPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    placeholder="98765 43210" className={inputCls()} autoComplete="tel" />
+                  <input type="tel" name="phone" value={registerFormik.values.phone}
+                    onChange={(e) => {
+                      setFormError('')
+                      registerFormik.setFieldValue('phone', e.target.value.replace(/\D/g, '').slice(0, 10))
+                    }}
+                    onBlur={registerFormik.handleBlur}
+                    placeholder="98765 43210" className={inputCls(registerFormik.touched.phone && registerFormik.errors.phone)} autoComplete="tel" />
                 </div>
               </Field>
 
-              <Field label="Password">
+              <Field label="Password" error={registerFormik.touched.password && registerFormik.errors.password}>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔒</span>
-                  <input type={showRPass ? 'text' : 'password'} value={rPass}
-                    onChange={(e) => setRPass(e.target.value)}
+                  <input type={showRPass ? 'text' : 'password'} name="password" value={rPass}
+                    onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
+                    onBlur={registerFormik.handleBlur}
                     placeholder="Min 8 chars, uppercase & number"
-                    className={inputCls() + ' pr-10'} autoComplete="new-password" />
+                    className={inputCls(registerFormik.touched.password && registerFormik.errors.password) + ' pr-10'} autoComplete="new-password" />
                   <button type="button" onClick={() => setShowRPass((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     {showRPass ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
@@ -357,16 +372,17 @@ export default function LoginPage() {
                 )}
               </Field>
 
-              <Field label="Confirm password">
+              <Field label="Confirm password" error={registerFormik.touched.confirmPassword && registerFormik.errors.confirmPassword}>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔐</span>
-                  <input type={showCPass ? 'text' : 'password'} value={rConf}
-                    onChange={(e) => setRConf(e.target.value)}
+                  <input type={showCPass ? 'text' : 'password'} name="confirmPassword" value={registerFormik.values.confirmPassword}
+                    onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
+                    onBlur={registerFormik.handleBlur}
                     placeholder="Re-enter password"
-                    className={inputCls() + ' pr-16'} autoComplete="new-password" />
-                  {rConf && (
+                    className={inputCls(registerFormik.touched.confirmPassword && registerFormik.errors.confirmPassword) + ' pr-16'} autoComplete="new-password" />
+                  {registerFormik.values.confirmPassword && (
                     <span className="absolute right-9 top-1/2 -translate-y-1/2 text-xs">
-                      {rPass === rConf ? '✅' : '❌'}
+                      {rPass === registerFormik.values.confirmPassword ? '✅' : '❌'}
                     </span>
                   )}
                   <button type="button" onClick={() => setShowCPass((v) => !v)}
@@ -376,18 +392,25 @@ export default function LoginPage() {
                 </div>
               </Field>
 
-              <label className="flex items-start gap-2 text-xs text-gray-500 cursor-pointer select-none">
-                <input type="checkbox" checked={rTerms} onChange={(e) => setRTerms(e.target.checked)}
-                  className="w-3.5 h-3.5 mt-0.5 accent-[#8e4440] shrink-0" />
-                I agree to the{' '}
-                <span className="text-[#8e4440] ml-0.5 hover:underline">Terms</span>
-                &nbsp;and&nbsp;
-                <span className="text-[#8e4440] hover:underline">Privacy Policy</span>
-              </label>
+              <div>
+                <label className="flex items-start gap-2 text-xs text-gray-500 cursor-pointer select-none">
+                  <input type="checkbox" name="terms" checked={registerFormik.values.terms}
+                    onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
+                    onBlur={registerFormik.handleBlur}
+                    className="w-3.5 h-3.5 mt-0.5 accent-[#8e4440] shrink-0" />
+                  I agree to the{' '}
+                  <span className="text-[#8e4440] ml-0.5 hover:underline">Terms</span>
+                  &nbsp;and&nbsp;
+                  <span className="text-[#8e4440] hover:underline">Privacy Policy</span>
+                </label>
+                {registerFormik.touched.terms && registerFormik.errors.terms && (
+                  <p className="mt-1 text-xs text-red-600">{registerFormik.errors.terms}</p>
+                )}
+              </div>
 
-              <button type="submit"
+              <button type="submit" disabled={registerFormik.isSubmitting}
                 className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors">
-                Create account
+                {registerFormik.isSubmitting ? 'Creating account…' : 'Create account'}
               </button>
 
               <OrLine />
@@ -406,11 +429,12 @@ export default function LoginPage() {
   )
 }
 
-function Field({ label, children }) {
+function Field({ label, error, children }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">{label}</label>
       {children}
+      {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   )
 }
