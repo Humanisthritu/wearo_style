@@ -40,20 +40,25 @@ const registerSchema = Yup.object({
 })
 
 export default function LoginPage() {
-  const router        = useRouter()
-  const dispatch      = useAppDispatch()
+  const router = useRouter()
+  const dispatch = useAppDispatch()
   const { showToast } = useToast()
 
-  const [tab, setTab]           = useState('login')
-  const [loading, setLoading]   = useState(false)
+  const [tab, setTab] = useState('login')
+  const [loading, setLoading] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [formError, setFormError] = useState('')
-  const [success,  setSuccess]  = useState('')
+  const [success, setSuccess] = useState('')
 
   const [remember, setRemember] = useState(false)
 
   const [showRPass, setShowRPass] = useState(false)
   const [showCPass, setShowCPass] = useState(false)
+
+  //forget password 
+
+  const [showForgot, setShowForgot] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
 
   const loginFormik = useFormik({
     initialValues: { emailOrUsername: '', password: '' },
@@ -75,9 +80,9 @@ export default function LoginPage() {
     onSubmit: handleRegister,
   })
 
-  
+
   useEffect(() => {
-    const session = getSession()   
+    const session = getSession()
     if (session) {
       dispatch(loginSuccess(session))
       router.replace('/')
@@ -89,11 +94,11 @@ export default function LoginPage() {
 
   const { password: rPass } = registerFormik.values
   const pwChecks = {
-    length:    rPass.length >= 8,
+    length: rPass.length >= 8,
     uppercase: /[A-Z]/.test(rPass),
-    number:    /\d/.test(rPass),
+    number: /\d/.test(rPass),
   }
-  const pwScore  = Object.values(pwChecks).filter(Boolean).length
+  const pwScore = Object.values(pwChecks).filter(Boolean).length
   const pwColors = ['#e24b4a', '#e24b4a', '#ef9f27', '#22c55e']
   const pwWidths = ['25%', '25%', '60%', '100%']
 
@@ -106,7 +111,11 @@ export default function LoginPage() {
       setFormError(result.error)
       return false
     }
-
+    const storage = remember ? localStorage : sessionStorage
+    storage.setItem(
+      'dripkart_session',
+      JSON.stringify(result.user)
+    )
     dispatch(loginSuccess(result.user))
     setSuccess(`Welcome back, ${result.user.firstName}!`)
     showToast(`Signed in as ${result.user.firstName} ${result.user.lastName} ✓`)
@@ -149,6 +158,30 @@ export default function LoginPage() {
       ? 'border-red-300 bg-red-50 focus:border-red-400 text-red-900'
       : 'border-gray-200 bg-gray-50 focus:border-[#8e4440] focus:bg-white text-gray-900'}`
 
+  const handleForgotPassword = (e) => {
+    e.preventDefault()
+    clear()
+    const email = forgotEmail.trim().toLowerCase()
+    if(!email) {
+      setFormError('Please enter your registered email address.')
+      return
+    }
+    
+    const user = JSON.parse(localStorage.getItem('dripkart_users') || '[]')
+    const foundUser = user.find(u => u.email.toLowerCase() === email)
+    if (!foundUser) {
+      setFormError('No account found with this email address.')
+      return
+    }
+    localStorage.setItem('dripkart_reset_email',
+      JSON.stringify({
+      email,
+      createdAt: Date.now(),
+    }))
+    setSuccess('Password reset link sent to your email.')
+    showToast('Password reset link sent! Check your email.')
+  }    
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4">
       <div className="w-full max-w-3xl grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
@@ -174,8 +207,8 @@ export default function LoginPage() {
             </p>
             {[
               { icon: <AirportShuttleOutlinedIcon fontSize="small" />, text: 'Free delivery above ₹999' },
-              { icon: <AutorenewOutlinedIcon fontSize="small" />,      text: '30-day hassle-free returns' },
-              { icon: <CardGiftcardOutlinedIcon fontSize="small" />,   text: 'Exclusive member deals' },
+              { icon: <AutorenewOutlinedIcon fontSize="small" />, text: '30-day hassle-free returns' },
+              { icon: <CardGiftcardOutlinedIcon fontSize="small" />, text: 'Exclusive member deals' },
             ].map((p) => (
               <div key={p.text} className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[#8e4440]"
@@ -187,12 +220,12 @@ export default function LoginPage() {
             ))}
           </div>
 
-          
+
           <button onClick={handleDemoLogin} disabled={loading}
             className="relative z-10 rounded-xl p-3.5 border text-left w-full transition-all hover:border-[#8e4440]/40 disabled:opacity-60"
             style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
-           <p className="flex text-lg text-[#8e4440] mb-0.5 font-medium justify-center">LIVE EVERYDAY</p>
-            
+            <p className="flex text-lg text-[#8e4440] mb-0.5 font-medium justify-center">LIVE EVERYDAY</p>
+
           </button>
         </div>
 
@@ -221,73 +254,127 @@ export default function LoginPage() {
 
           {/* ── LOGIN ── */}
           {tab === 'login' && (
-            <form onSubmit={loginFormik.handleSubmit} noValidate className="flex flex-col gap-3.5">
-              <div>
-                <p className="text-lg font-medium text-gray-900 mb-0.5">Welcome back</p>
-                <p className="text-xs text-gray-400">Use your username or registered email</p>
-              </div>
+            <>
+              {showForgot ? (
+                <form
+                  onSubmit={handleForgotPassword}
+                  className="flex flex-col gap-4"
+                >
+                  <div>
+                    <p className="text-lg font-medium text-gray-900 mb-0.5">
+                      Reset your password
+                    </p>
 
-              <Field label="Email or username" error={loginFormik.touched.emailOrUsername && loginFormik.errors.emailOrUsername}>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
-                  <input type="text" name="emailOrUsername" value={loginFormik.values.emailOrUsername}
-                    onChange={(e) => { setFormError(''); loginFormik.handleChange(e) }}
-                    onBlur={loginFormik.handleBlur}
-                    placeholder="kminchelle  or  you@email.com"
-                    className={inputCls(loginFormik.touched.emailOrUsername && loginFormik.errors.emailOrUsername)}
-                    autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
+                    <p className="text-xs text-gray-400">
+                      Enter your registered email address.
+                    </p>
+                  </div>
+
+                  <Field label="Email">
+                    <input
+                      type="email"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className={inputCls(false)}
+                    />
+                  </Field>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg"
+                  >
+                    Send reset link
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForgot(false)
+                      setForgotEmail('')
+                    }}
+                    className="text-xs text-gray-500 hover:text-[#8e4440]"
+                  >
+                    Back to sign in
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={loginFormik.handleSubmit} noValidate className="flex flex-col gap-3.5">
+                <div>
+                  <p className="text-lg font-medium text-gray-900 mb-0.5">Welcome back</p>
+                  <p className="text-xs text-gray-400">Use your username or registered email</p>
                 </div>
-              </Field>
 
-              <Field label="Password" error={loginFormik.touched.password && loginFormik.errors.password}>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔒</span>
-                  <input type={showPass ? 'text' : 'password'} name="password" value={loginFormik.values.password}
-                    onChange={(e) => { setFormError(''); loginFormik.handleChange(e) }}
-                    onBlur={loginFormik.handleBlur}
-                    placeholder="Enter your password"
-                    className={inputCls(loginFormik.touched.password && loginFormik.errors.password) + ' pr-10'}
-                    autoComplete="current-password" />
-                  <button type="button" onClick={() => setShowPass((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                    {showPass ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                <Field label="Email or username" error={loginFormik.touched.emailOrUsername && loginFormik.errors.emailOrUsername}>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
+                    <input type="text" name="emailOrUsername" value={loginFormik.values.emailOrUsername}
+                      onChange={(e) => { setFormError(''); loginFormik.handleChange(e) }}
+                      onBlur={loginFormik.handleBlur}
+                      placeholder="kminchelle  or  you@email.com"
+                      className={inputCls(loginFormik.touched.emailOrUsername && loginFormik.errors.emailOrUsername)}
+                      autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck="false" />
+                  </div>
+                </Field>
+
+                <Field label="Password" error={loginFormik.touched.password && loginFormik.errors.password}>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔒</span>
+                    <input type={showPass ? 'text' : 'password'} name="password" value={loginFormik.values.password}
+                      onChange={(e) => { setFormError(''); loginFormik.handleChange(e) }}
+                      onBlur={loginFormik.handleBlur}
+                      placeholder="Enter your password"
+                      className={inputCls(loginFormik.touched.password && loginFormik.errors.password) + ' pr-10'}
+                      autoComplete="current-password" />
+                    <button type="button" onClick={() => setShowPass((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      {showPass ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                    </button>
+                  </div>
+                </Field>
+
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
+                    <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)}
+                      className="w-3.5 h-3.5 accent-[#8e4440]" />
+                    Remember me
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clear()
+                      setForgotEmail(loginFormik.values.emailOrUsername)
+                      setShowForgot(true)
+                    }}
+                    className="text-xs text-[#8e4440] hover:underline"
+                  >
+                    Forgot password?
                   </button>
                 </div>
-              </Field>
 
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
-                  <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-[#8e4440]" />
-                  Remember me
-                </label>
-                <button type="button" onClick={() => showToast('Reset email sent! 📧')}
-                  className="text-xs text-[#8e4440] hover:underline">
-                  Forgot password?
+                <button type="submit" disabled={loading || loginFormik.isSubmitting}
+                  className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-55 flex items-center justify-center gap-2">
+                  {(loading || loginFormik.isSubmitting) && <Spin />} {loading || loginFormik.isSubmitting ? 'Signing in…' : 'Sign in'}
                 </button>
-              </div>
 
-              <button type="submit" disabled={loading || loginFormik.isSubmitting}
-                className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors disabled:opacity-55 flex items-center justify-center gap-2">
-                {(loading || loginFormik.isSubmitting) && <Spin />} {loading || loginFormik.isSubmitting ? 'Signing in…' : 'Sign in'}
-              </button>
-
-              <button type="button" onClick={handleDemoLogin} disabled={loading}
-                className="w-full py-2.5 text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg hover:border-[#8e4440] hover:text-[#8e4440] transition-all disabled:opacity-50 flex items-center justify-center gap-1.5">
-                {loading ? <Spin /> : '🧪'} Use demo account
-              </button>
-
-              <OrLine />
-              <SocialRow onToast={showToast} />
-
-              <p className="text-xs text-center text-gray-400">
-                No account?{' '}
-                <button type="button" onClick={() => switchTab('register')}
-                  className="text-[#8e4440] font-medium hover:underline">
-                  Create one free
+                <button type="button" onClick={handleDemoLogin} disabled={loading}
+                  className="w-full py-2.5 text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg hover:border-[#8e4440] hover:text-[#8e4440] transition-all disabled:opacity-50 flex items-center justify-center gap-1.5">
+                  {loading ? <Spin /> : '🧪'} Use demo account
                 </button>
-              </p>
-            </form>
+
+                <OrLine />
+                <SocialRow onToast={showToast} />
+
+                <p className="text-xs text-center text-gray-400">
+                  No account?{' '}
+                  <button type="button" onClick={() => switchTab('register')}
+                    className="text-[#8e4440] font-medium hover:underline">
+                    Create one free
+                  </button>
+                </p>
+              </form>
+              )}             
+            </>
           )}
 
           {/* ── REGISTER ── */}
@@ -305,7 +392,7 @@ export default function LoginPage() {
                     <input type="text" name="firstName" value={registerFormik.values.firstName}
                       onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
                       onBlur={registerFormik.handleBlur}
-                      placeholder="Rahul" className={inputCls(registerFormik.touched.firstName && registerFormik.errors.firstName)} autoComplete="given-name" />
+                      placeholder="Ritu" className={inputCls(registerFormik.touched.firstName && registerFormik.errors.firstName)} autoComplete="given-name" />
                   </div>
                 </Field>
                 <Field label="Last name" error={registerFormik.touched.lastName && registerFormik.errors.lastName}>
@@ -314,7 +401,7 @@ export default function LoginPage() {
                     <input type="text" name="lastName" value={registerFormik.values.lastName}
                       onChange={(e) => { setFormError(''); registerFormik.handleChange(e) }}
                       onBlur={registerFormik.handleBlur}
-                      placeholder="Sharma" className={inputCls(registerFormik.touched.lastName && registerFormik.errors.lastName)} autoComplete="family-name" />
+                      placeholder="Kujur" className={inputCls(registerFormik.touched.lastName && registerFormik.errors.lastName)} autoComplete="family-name" />
                   </div>
                 </Field>
               </div>
@@ -338,7 +425,7 @@ export default function LoginPage() {
                       registerFormik.setFieldValue('phone', e.target.value.replace(/\D/g, '').slice(0, 10))
                     }}
                     onBlur={registerFormik.handleBlur}
-                    placeholder="98765 43210" className={inputCls(registerFormik.touched.phone && registerFormik.errors.phone)} autoComplete="tel" />
+                    placeholder="9100000000" className={inputCls(registerFormik.touched.phone && registerFormik.errors.phone)} autoComplete="tel" />
                 </div>
               </Field>
 
@@ -408,7 +495,7 @@ export default function LoginPage() {
                 )}
               </div>
 
-              <button type="submit" disabled={registerFormik.isSubmitting}
+              <button type="submit"
                 className="w-full py-2.5 bg-[#8e4440] text-white text-sm font-medium rounded-lg hover:bg-[#e03560] transition-colors">
                 {registerFormik.isSubmitting ? 'Creating account…' : 'Create account'}
               </button>
@@ -451,8 +538,8 @@ function OrLine() {
 
 function SocialRow({ onToast }) {
   return (
-    <div className="grid grid-cols-2 gap-2">
-      {[[<GoogleIcon fontSize="small" />, 'Google'], [<AppleIcon fontSize="small" />, 'Apple']].map(([icon, name]) => (
+    <div className="grid grid-cols-1 gap-2">
+      {[[<GoogleIcon fontSize="small" />, 'Google']].map(([icon, name]) => (
         <button key={name} type="button" onClick={() => onToast(`${name} login coming soon!`)}
           className="flex items-center justify-center gap-2 py-2.5 text-xs font-medium text-gray-600 border border-gray-100 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-all">
           {icon} {name}
@@ -465,8 +552,8 @@ function SocialRow({ onToast }) {
 function Spin() {
   return (
     <svg className="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
     </svg>
   )
 }
