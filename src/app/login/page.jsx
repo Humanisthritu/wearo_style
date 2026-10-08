@@ -82,7 +82,7 @@ export default function LoginPage() {
       dispatch(loginSuccess(session))
       router.replace('/')
     }
-  }, []) 
+  }, [dispatch, router])
 
   function clear() { setFormError(''); setSuccess('') }
   function switchTab(t) { setTab(t); clear() }
@@ -146,8 +146,8 @@ export default function LoginPage() {
   const inputCls = (hasErr) =>
     `w-full pl-10 pr-4 py-2.5 rounded-lg border text-sm outline-none transition-all
      ${hasErr
-       ? 'border-red-300 bg-red-50 focus:border-red-400 text-red-900'
-       : 'border-gray-200 bg-gray-50 focus:border-[#8e4440] focus:bg-white text-gray-900'}`
+      ? 'border-red-300 bg-red-50 focus:border-red-400 text-red-900'
+      : 'border-gray-200 bg-gray-50 focus:border-[#8e4440] focus:bg-white text-gray-900'}`
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4">

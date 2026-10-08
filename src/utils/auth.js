@@ -135,30 +135,3 @@ export function registerUser({ firstName, lastName, email, phone, password }) {
   saveSession(safe)
   return { success: true, user: safe }
 }
-
-// ── validation ────────────────────────────────────────────────────────────────
-
-export function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
-
-export function validatePhone(phone) {
-  return /^[6-9]\d{9}$/.test(phone.replace(/[\s-]/g, ''))
-}
-
-export function validatePassword(password) {
-  const checks = {
-    length:    password.length >= 8,
-    uppercase: /[A-Z]/.test(password),
-    lowercase: /[a-z]/.test(password),
-    number:    /\d/.test(password),
-  }
-  const score = Object.values(checks).filter(Boolean).length
-  return {
-    checks,
-    score,
-    strength: score <= 1 ? 'Weak' : score <= 2 ? 'Fair' : score === 3 ? 'Good' : 'Strong',
-    color:    score <= 1 ? '#ef4444' : score <= 2 ? '#f59e0b' : score === 3 ? '#3b82f6' : '#22c55e',
-    valid:    score >= 3,
-  }
-}
