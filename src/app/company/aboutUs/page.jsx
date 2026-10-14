@@ -24,7 +24,7 @@ const mono = JetBrains_Mono({
 const ink = '#14120F'
 const paper = '#FAF7F2'
 const line = '#DAD5C9'
-const dripBlue = '#2A4DFF'
+const dripBlue = '#8e4440'
 const dripOrange = '#FF5B2E'
 
 /* ---------- Signature element: the drip edge ----------
@@ -158,8 +158,7 @@ export default function AboutPage() {
         }}
       >
         <Box
-          component="img"
-          src="/images/about-hero.jpg"
+          src="https://media.istockphoto.com/id/1402604850/photo/the-word-about-us-on-wooden-cubes-business-communication-and-information.jpg"
           alt="DripKart pieces styled on the street"
           sx={{
             position: 'absolute',
@@ -218,7 +217,7 @@ export default function AboutPage() {
             <Box sx={{ position: 'relative' }}>
               <Box
                 component="img"
-                src="/images/about-story.jpg"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt2Ei7mIKwyUv2Li1kDTjJ1JuC2GG9X5uE29v0dknmw4jt0VuH2I3YxNzp&s=10"
                 alt="First DripKart collection in production"
                 sx={{ width: '100%', borderRadius: '4px', display: 'block' }}
               />

@@ -13,7 +13,7 @@ export default async function NewArrivalsSection() {
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="section-title">New Arrivals ✨</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">New Arrivals ✨</h2>
           <p className="text-sm text-gray-500 mt-1">Fresh styles, just dropped</p>
         </div>
         <Link href="/shop?tag=new" className="text-sm text-[#8e4440] font-semibold hover:underline">

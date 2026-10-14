@@ -24,7 +24,6 @@ const mono = JetBrains_Mono({
 const ink = '#14120F'
 const paper = '#FAF7F2'
 const line = '#DAD5C9'
-const dripBlue = '#2A4DFF'
 const dripOrange = '#FF5B2E'
 
 const JOBS = [
@@ -35,7 +34,7 @@ const JOBS = [
 ]
 
 /* Signature element, reused from /about: the drip edge seam */
-function DripEdge({ color = dripBlue, flip = false }) {
+function DripEdge({ color = '#8e4440', flip = false }) {
   return (
     <Box
       component="svg"
@@ -75,7 +74,7 @@ function Patch({ n, title, rotate = 0 }) {
         height: '100%',
         transform: `rotate(${rotate}deg)`,
         transition: 'transform .25s ease',
-        '&:hover': { transform: 'rotate(0deg)', bgcolor: dripBlue },
+        '&:hover': { transform: 'rotate(0deg)', bgcolor: '#8e4440' },
       }}
     >
       <Typography className={mono.className} sx={{ fontSize: 12, opacity: 0.6, mb: 1 }}>
@@ -101,7 +100,7 @@ function JobTicket({ job }) {
         overflow: 'hidden',
         display: 'flex',
         transition: 'box-shadow .2s ease, transform .2s ease',
-        '&:hover': { boxShadow: `6px 6px 0px ${dripBlue}`, transform: 'translate(-3px,-3px)' },
+        '&:hover': { boxShadow: `6px 6px 0px ${'#8e4440'}`, transform: 'translate(-3px,-3px)' },
       }}
     >
       {/* ticket notches */}
@@ -109,7 +108,7 @@ function JobTicket({ job }) {
       <Box sx={{ position: 'absolute', left: { xs: '68%', sm: 168 }, bottom: -10, width: 20, height: 20, borderRadius: '50%', bgcolor: paper, border: `2px solid ${ink}` }} />
 
       <Box sx={{ flex: 1, p: 3 }}>
-        <Typography className={mono.className} sx={{ fontSize: 11, letterSpacing: '0.1em', color: dripBlue, mb: 1 }}>
+        <Typography className={mono.className} sx={{ fontSize: 11, letterSpacing: '0.1em', color: '#8e4440', mb: 1 }}>
           {job.dept}
         </Typography>
         <Typography className={display.className} sx={{ fontSize: 26, lineHeight: 1, mb: 1 }}>
@@ -136,7 +135,7 @@ function JobTicket({ job }) {
         <Typography className={mono.className} sx={{ fontSize: 10, letterSpacing: '0.08em', color: '#4A463E' }}>
           {job.type}
         </Typography>
-        <Button
+        {/* <Button
           size="small"
           sx={{
             fontFamily: 'var(--font-mono)',
@@ -150,7 +149,7 @@ function JobTicket({ job }) {
           }}
         >
           APPLY →
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   )
@@ -181,7 +180,7 @@ export default function CareersPage() {
       >
         <Box
           component="img"
-          src="/images/careers-hero.jpg"
+          src="https://img.magnific.com/free-photo/digital-art-style-illustration-fashion-designer_23-2151537701.jpg?semt=ais_hybrid&w=740&q=80"
           alt="The DripKart team at work"
           sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -210,15 +209,15 @@ export default function CareersPage() {
             BUILD THE DRIP WITH US
           </Typography>
           <Typography className={body.className} sx={{ maxWidth: 480, mt: 3, fontSize: 18, color: '#E9E5DB' }}>
-            We're a small crew making a big fashion label move fast. If you'd
-            rather build than watch, there's a seat for you.
+            We&apos;re a small crew making a big fashion label move fast. If you&apos;d
+            rather build than watch, there&apos;s a seat for you.
           </Typography>
           <Button
             href="#open-positions"
             variant="contained"
             sx={{
               mt: 4,
-              bgcolor: dripBlue,
+              bgcolor: '#8e4440',
               color: paper,
               borderRadius: '2px',
               px: 4,
@@ -234,13 +233,13 @@ export default function CareersPage() {
           </Button>
         </Container>
       </Box>
-      <DripEdge color={dripBlue} />
+      <DripEdge color={'#8e4440'} />
 
       {/* ---------------- CULTURE ---------------- */}
       <Container sx={{ py: { xs: 8, md: 12 } }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={5}>
-            <Typography className={mono.className} sx={{ fontSize: 13, color: dripBlue, letterSpacing: '0.12em', mb: 2 }}>
+            <Typography className={mono.className} sx={{ fontSize: 13, color: '#8e4440', letterSpacing: '0.12em', mb: 2 }}>
               OUR CULTURE
             </Typography>
             <Typography className={display.className} sx={{ fontSize: { xs: 30, md: 40 }, lineHeight: 1.05, color: ink }}>
@@ -249,9 +248,9 @@ export default function CareersPage() {
           </Grid>
           <Grid item xs={12} md={7}>
             <Typography className={body.className} sx={{ color: '#4A463E', fontSize: 16, lineHeight: 1.8 }}>
-              We build fast, argue about details, and ship things we're
+              We build fast, argue about details, and ship things we&apos;re
               genuinely proud to wear. Everyone here has a say in what
-              DripKart looks and feels like next — we're just getting
+              DripKart looks and feels like next — we&apos;re just getting
               started, and we want people who want to leave a mark on it.
             </Typography>
           </Grid>
@@ -284,7 +283,7 @@ export default function CareersPage() {
 
       {/* ---------------- OPEN POSITIONS ---------------- */}
       <Container id="open-positions" sx={{ py: { xs: 8, md: 12 } }}>
-        <Typography className={mono.className} sx={{ fontSize: 13, color: dripBlue, letterSpacing: '0.12em', mb: 1 }}>
+        <Typography className={mono.className} sx={{ fontSize: 13, color: '#8e4440', letterSpacing: '0.12em', mb: 1 }}>
           {JOBS.length} OPEN ROLES
         </Typography>
         <Typography className={display.className} sx={{ fontSize: { xs: 32, md: 44 }, mb: 6, color: ink }}>
@@ -329,7 +328,7 @@ export default function CareersPage() {
                       width: 28,
                       height: 28,
                       borderRadius: '50%',
-                      bgcolor: dripBlue,
+                      bgcolor: '#8e4440',
                       mx: 'auto',
                       mb: 2,
                       display: 'flex',
@@ -368,7 +367,7 @@ export default function CareersPage() {
             href="#open-positions"
             variant="contained"
             sx={{
-              bgcolor: dripBlue,
+              bgcolor: '#8e4440',
               color: paper,
               borderRadius: '2px',
               px: 5,
