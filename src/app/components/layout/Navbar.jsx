@@ -99,13 +99,15 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Search */}
-          <div className="hidden md:block flex-1 max-w-xs">
-            <SearchBar />
-          </div>
+         
 
           {/* Right icons */}
           <div className="flex items-center gap-1 ml-auto">
+
+           {/* Search */}
+          <div className="hidden md:block flex-1 max-w-xs">
+            <SearchBar />
+          </div>
 
             {/* Wishlist */}
             <Link href="/wishlist"
