@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import {
   selectCartItems, selectCartSubtotal,
@@ -25,24 +25,18 @@ import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
-import { selectAllAddresses } from '@/redux/slices/addressSlice'
+import { selectAddressById, selectAllAddresses } from '@/redux/slices/addressSlice'
 import { placeOrder } from '@/redux/slices/ordersSlice'
+import CardMembershipTwoToneIcon from '@mui/icons-material/CardMembershipTwoTone';
+import AppShortcutTwoToneIcon from '@mui/icons-material/AppShortcutTwoTone';
+import AccountBalanceTwoToneIcon from '@mui/icons-material/AccountBalanceTwoTone';
+import LocalAtmTwoToneIcon from '@mui/icons-material/LocalAtmTwoTone';
+import AirportShuttleTwoToneIcon from '@mui/icons-material/AirportShuttleTwoTone';
+import ScreenRotationAltTwoToneIcon from '@mui/icons-material/ScreenRotationAltTwoTone';
+import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
+import { Button } from '@mui/material'
 
-// ── Mock saved addresses ───────────────────────────────────────────────────────
-// const addresses = [
-//   {
-//     id: '1', label: 'Home', name: 'Rahul Sharma', phone: '9876543210',
-//     line1: 'Flat 4B, Sunshine Apartments, 12th Cross',
-//     line2: 'Indiranagar', city: 'Bengaluru', state: 'Karnataka',
-//     pincode: '560038', isDefault: true,
-//   },
-//   {
-//     id: '2', label: 'Work', name: 'Rahul Sharma', phone: '9876543210',
-//     line1: '3rd Floor, Tech Park, Outer Ring Road',
-//     line2: 'Marathahalli', city: 'Bengaluru', state: 'Karnataka',
-//     pincode: '560037', isDefault: false,
-//   },
-// ]
+
 
 const STEPS = [
   { id: 1, label: 'Address', icon: <LocationOnOutlinedIcon fontSize="small" /> },
@@ -57,6 +51,7 @@ const DELIVERY_OPTIONS = [
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const dispatch = useAppDispatch()
   const { showToast } = useToast()
   const isAuth = useAppSelector(selectIsAuthenticated)
@@ -66,7 +61,31 @@ export default function CheckoutPage() {
   const cartTotal = useAppSelector(selectCartTotal)
   const addresses = useAppSelector(selectAllAddresses)
   const [orderSummary, setOrderSummary] = useState(null)
+
   console.log(items, "items checkout")
+
+  const selectedKeys = (searchParams.get('items') || '')
+    .split(',')
+    .filter(Boolean)
+
+  const checkoutItems = selectedKeys.length
+    ? items.filter((item) =>
+      selectedKeys.includes(`${item.product.id}-${item.size}`)
+    )
+    : items
+
+  const checkoutSubtotal = checkoutItems.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  )
+
+  const discountPercent = useAppSelector(
+    (state) => state.cart.discountPercent
+  ) || 0
+
+  const checkoutDiscount = checkoutSubtotal * (discountPercent / 100)
+
+  const checkoutTotal = checkoutSubtotal - checkoutDiscount
 
   // ── Step state ────────────────────────────────────────────────────────────
   const [step, setStep] = useState(1)
@@ -90,9 +109,17 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState(null)
 
   // ── Derived ───────────────────────────────────────────────────────────────
+
   const deliveryCharge = delivery === 'express' ? 99 : 0
-  const grandTotal = cartTotal + deliveryCharge
-  const selectedAddr = addresses.find((a) => a.id === selectedAddressId)
+  const grandTotal = checkoutTotal + deliveryCharge
+  const selectedAddr = addresses.find(
+    (address) => address.id === selectedAddressId
+  )
+
+
+
+
+
 
   // ── Guards ────────────────────────────────────────────────────────────────
   if (!isAuth) {
@@ -134,6 +161,9 @@ export default function CheckoutPage() {
   // ── Step 2 → 3 (place order) ──────────────────────────────────────────────
   async function handlePlaceOrder() {
     if (payMethod === 'card') {
+      if(card.name === 'ritu', card.number === '5555101055551010', card.expiry === '12/34', card.cvv === '345'){
+        showToast('Payment initiated', 'success')
+      }
       if (!card.name) { showToast('Enter name on card', 'error'); return }
       if (card.number.replace(/\s/g, '').length < 16) { showToast('Enter valid card number', 'error'); return }
       if (!card.expiry) { showToast('Enter expiry date', 'error'); return }
@@ -419,8 +449,10 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <button onClick={handleAddressContinue}
-                    className="w-full py-3 bg-[#8e4440] text-white text-sm font-medium rounded-xl hover:bg-[#e03560] transition-colors mt-1">
+                  <button 
+                  //disable logic
+                  onClick={handleAddressContinue}
+                    className="w-full mt-4 py-3.5 bg-[#8e4440] text-white text-sm font-semibold rounded-xl hover:bg-[#e03560] transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
                     Continue to Payment →
                   </button>
                 </div>
@@ -456,10 +488,10 @@ export default function CheckoutPage() {
                   {/* Payment method tabs */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
                     {[
-                      { id: 'card', icon: '💳', label: 'Card' },
-                      { id: 'upi', icon: '📱', label: 'UPI' },
-                      { id: 'netbanking', icon: '🏦', label: 'Net Banking' },
-                      { id: 'cod', icon: '💵', label: 'COD' },
+                      { id: 'card', icon: <CardMembershipTwoToneIcon />, label: 'Card' },
+                      { id: 'upi', icon: <AppShortcutTwoToneIcon />, label: 'UPI' },
+                      { id: 'netbanking', icon: <AccountBalanceTwoToneIcon />, label: 'Net Banking' },
+                      { id: 'cod', icon: <LocalAtmTwoToneIcon />, label: 'COD' },
                     ].map((m) => (
                       <button key={m.id} onClick={() => setPayMethod(m.id)}
                         className={`py-2.5 rounded-xl border text-xs font-medium transition-all flex flex-col items-center gap-1
@@ -477,7 +509,7 @@ export default function CheckoutPage() {
                       <div>
                         <label className={labelCls}>Name on card</label>
                         <input value={card.name} onChange={(e) => setCard((c) => ({ ...c, name: e.target.value }))}
-                          placeholder="Rahul Sharma" className={inputCls()} autoComplete="cc-name" />
+                          placeholder="Ritu Kujur" className={inputCls()} autoComplete="cc-name" />
                       </div>
                       <div>
                         <label className={labelCls}>Card number</label>
@@ -581,21 +613,35 @@ export default function CheckoutPage() {
 
             {/* Items */}
             <div className="flex flex-col gap-3 mb-4 max-h-52 overflow-y-auto">
-              {items.map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
+
+              {checkoutItems.map((item) => (
+                <div
+                  key={`${item.product.id}-${item.size}`}
+                  className="flex items-center gap-3"
+                >
                   <div className="w-12 h-14 rounded-lg bg-gray-100 overflow-hidden shrink-0">
-                    <img src={item.product.thumbnail} alt={item.product.title}
-                      className="w-full h-full object-cover" />
+                    <img
+                      src={item.product.thumbnail}
+                      alt={item.product.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
+
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-800 truncate">{item.product.title}</p>
-                    <p className="text-[10px] text-gray-400">Size: {item.size} · Qty: {item.quantity}</p>
+                    <p className="text-xs font-medium text-gray-800 truncate">
+                      {item.product.title}
+                    </p>
+                    <p className="text-[10px] text-gray-400">
+                      Size: {item.size} · Qty: {item.quantity}
+                    </p>
                   </div>
+
                   <p className="text-xs font-semibold text-gray-900 shrink-0">
                     {formatPrice(item.product.price * item.quantity)}
                   </p>
                 </div>
               ))}
+
             </div>
 
             <div className="space-y-2 text-sm border-t border-gray-100 pt-3">
@@ -631,9 +677,9 @@ export default function CheckoutPage() {
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-2 mt-4">
               {[
-                { icon: '🔒', text: 'Secure payment' },
-                { icon: '↩️', text: '30-day return' },
-                { icon: '🚚', text: 'Fast delivery' },
+                { icon:  <AirportShuttleTwoToneIcon />, text: 'Secure payment' },
+                { icon: <ScreenRotationAltTwoToneIcon />, text: '30-day return' },
+                { icon:  <LockTwoToneIcon />, text: 'Fast delivery' },
               ].map((b) => (
                 <div key={b.text} className="bg-gray-50 rounded-xl py-2.5 px-1 flex flex-col items-center gap-1">
                   <span className="text-base">{b.icon}</span>
